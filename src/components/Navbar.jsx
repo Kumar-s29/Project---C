@@ -1,71 +1,138 @@
-
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
+import { Menu, X, Moon, Sun } from "lucide-react";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isAdmin, logout } = useAuth();
+  const { darkMode, setDarkMode } = useTheme();
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false); // mobile menu
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
+  const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <nav className="bg-sky-500/50 text-black p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold">
-          VIIT-tice Board
-        </Link>
+    <nav className="bg-blue-600 dark:bg-gray-900 text-white px-4 py-3">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
+        {/* Logo */}
+        <div className="text-xl font-bold">
+          <Link to="/">Project C</Link>
+        </div>
 
-        {/* Hamburger Icon (Mobile) */}
+        {/* Hamburger Icon */}
         <div className="md:hidden">
-          <button onClick={() => setIsOpen(!isOpen)}>
+          <button onClick={toggleMenu}>
             {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
-        {/* Desktop Menu */}
-        <ul className="hidden md:flex space-x-6 font-semibold">
-          <li>
-            <Link to="/" className="hover:text-white">Home</Link>
-          </li>
-          <li>
-            <Link to="/notices" className="hover:text-white">Upload Notice</Link>
-          </li>
-          <li>
-            <Link to="/login" className="hover:text-white">Login</Link>
-          </li>
-        </ul>
-      </div>
+        {/* Links (Desktop) */}
+        <div className="hidden md:flex items-center gap-4">
+          <Link to="/">Home</Link>
 
-      {/* Mobile Dropdown Menu */}
-      {isOpen && (
-        <div className="md:hidden mt-2 bg-sky-400 rounded-lg shadow-lg">
-          <ul className="flex flex-col space-y-2 px-4 py-2 font-semibold">
-            <li>
+          {isAdmin && (
+            <>
               <Link
-                to="/"
-                onClick={() => setIsOpen(false)}
-                className="hover:text-white"
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/notices"
-                onClick={() => setIsOpen(false)}
-                className="hover:text-white"
+                to="/upload-notice"
+                className="bg-white text-blue-600 px-3 py-1 rounded-xl"
               >
                 Upload Notice
               </Link>
-            </li>
-            <li>
               <Link
-                to="/login"
-                onClick={() => setIsOpen(false)}
-                className="hover:text-white"
+                to="/admin-dashboard"
+                className="bg-white text-blue-600 px-3 py-1 rounded-xl"
               >
-                Login
+                Admin Dashboard
               </Link>
-            </li>
-          </ul>
+            </>
+          )}
+
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="bg-white dark:bg-black text-black dark:text-yellow-300 px-3 py-1 rounded-xl"
+          >
+            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+
+          {isAdmin ? (
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-xl"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-white text-blue-600 px-3 py-1 rounded-xl"
+            >
+              Login
+            </Link>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile Dropdown */}
+      {isOpen && (
+        <div className="md:hidden flex flex-col gap-4 mt-4 px-2">
+          <Link to="/" onClick={toggleMenu}>
+            Home
+          </Link>
+
+          {isAdmin && (
+            <>
+              <Link
+                to="/upload-notice"
+                className="bg-white text-blue-600 px-3 py-1 rounded-xl"
+                onClick={toggleMenu}
+              >
+                Upload Notice
+              </Link>
+              <Link
+                to="/admin-dashboard"
+                className="bg-white text-blue-600 px-3 py-1 rounded-xl"
+                onClick={toggleMenu}
+              >
+                Admin Dashboard
+              </Link>
+            </>
+          )}
+
+          <button
+            onClick={() => {
+              setDarkMode(!darkMode);
+              toggleMenu();
+            }}
+            className="bg-white dark:bg-black text-black dark:text-yellow-300 px-3 py-1 rounded-xl"
+          >
+            {darkMode ? "Light Mode" : "Dark Mode"}
+          </button>
+
+          {isAdmin ? (
+            <button
+              onClick={() => {
+                handleLogout();
+                toggleMenu();
+              }}
+              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-xl"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="bg-white text-blue-600 px-3 py-1 rounded-xl"
+              onClick={toggleMenu}
+            >
+              Login
+            </Link>
+          )}
         </div>
       )}
     </nav>
