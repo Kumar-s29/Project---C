@@ -5,6 +5,7 @@ import { getAuth } from "firebase/auth";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 import { getStorage } from "firebase/storage";
 
+// Firebase config using environment variables
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -23,7 +24,7 @@ const storage = getStorage(app);
 const messaging = getMessaging(app);
 const analytics = getAnalytics(app);
 
-// Function to request notification permission and get FCM token
+// Request FCM token
 const requestForToken = async () => {
   try {
     const token = await getToken(messaging, {
@@ -32,24 +33,28 @@ const requestForToken = async () => {
     if (token) {
       console.log("FCM Token:", token);
     } else {
-      console.log("No registration token available. Request permission.");
+      console.log("No token available. Request permission to generate one.");
     }
-  } catch (error) {
-    console.error("Error fetching FCM token:", error);
+  } catch (err) {
+    console.error("An error occurred while retrieving token. ", err);
   }
 };
 
-// Listen for notifications when the app is in the foreground
+// Foreground message handler
 onMessage(messaging, (payload) => {
-  console.log("Message received:", payload);
-
-  if (Notification.permission === "granted") {
-    const { title, body, icon } = payload.notification;
-    new Notification(title, { body, icon });
-  } else {
-    console.warn("Notification permission not granted.");
-  }
+  console.log("Message received in foreground:", payload);
+  const { title, body, icon } = payload.notification;
+  new Notification(title, { body, icon });
 });
 
-// Export Firebase services
-export { app, auth, db, storage, messaging, analytics, requestForToken };
+export {
+  app,
+  auth,
+  db,
+  storage,
+  messaging,
+  analytics,
+  requestForToken,
+  getToken,
+  onMessage,
+};

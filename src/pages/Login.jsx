@@ -1,10 +1,20 @@
 import React, { useState } from "react";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../firebase/firebaseConfig";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext"; // 👈 Import the context
 
 const Login = () => {
+  const navigate = useNavigate();
+  const { loginAsAdmin } = useAuth();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -13,23 +23,52 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Logging in with:", formData);
-    // Handle login logic here
+    setError("");
+    setLoading(true);
+
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+      const user = userCredential.user;
+
+      if (formData.email === "admin@gmail.com") {
+        loginAsAdmin();
+        console.log("Admin logged in:", user);
+        navigate("/upload-notice");
+      } else {
+        setError("Access denied. Not an admin.");
+      }
+    } catch (error) {
+      console.error("Login error:", error.message);
+      setError("Invalid email or password");
+    }
+
+    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to--600 px-4">
-      <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md">
-        <h2 className="text-3xl font-semibold text-center text-blue-600 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-blue-600 dark:from-gray-900 dark:to-gray-800 px-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-8 w-full max-w-md">
+        <h2 className="text-3xl font-semibold text-center text-blue-600 dark:text-blue-400 mb-6">
           Login
         </h2>
+
+        {error && (
+          <p className="text-red-500 dark:text-red-400 text-sm text-center mb-4">
+            {error}
+          </p>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="email"
-              className="block text-gray-700 font-medium mb-1"
+              className="block text-gray-700 dark:text-gray-300 font-medium mb-1"
             >
               Email
             </label>
@@ -37,7 +76,7 @@ const Login = () => {
               type="email"
               id="email"
               name="email"
-              className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Enter your email"
               value={formData.email}
               onChange={handleChange}
@@ -47,7 +86,7 @@ const Login = () => {
           <div>
             <label
               htmlFor="password"
-              className="block text-gray-700 font-medium mb-1"
+              className="block text-gray-700 dark:text-gray-300 font-medium mb-1"
             >
               Password
             </label>
@@ -55,7 +94,7 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
-              className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-xl px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="Enter your password"
               value={formData.password}
               onChange={handleChange}
@@ -64,14 +103,12 @@ const Login = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-xl font-semibold hover:bg-blue-700 transition duration-300"
+            disabled={loading}
+            className="w-full bg-blue-600 dark:bg-blue-500 text-white py-2 rounded-xl font-semibold hover:bg-blue-700 dark:hover:bg-blue-600 transition duration-300"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
-        {/* <p className="text-center text-gray-500 text-sm mt-4">
-          Don't have an account? <a href="/register" className="text-blue-600 hover:underline">Register</a>
-        </p> */}
       </div>
     </div>
   );
