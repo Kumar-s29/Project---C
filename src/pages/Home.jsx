@@ -4,7 +4,9 @@ import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestor
 import { db } from "../firebase/firebaseConfig";
 import NoticeCard from "../components/NoticeCard";
 import { motion } from "framer-motion";
-import viit from "../assets/viit.png"; 
+import ImportantUpdates from "../components/ImportantUpdates";
+import viit from "../assets/viit.png";
+
 const Home = () => {
   const [latestNotices, setLatestNotices] = useState([]);
 
@@ -23,47 +25,52 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
-      
-   {/* Hero Section with image background */}
-<section className="relative bg-white dark:bg-gray-900 py-20 overflow-hidden">
-  {/* Replace SVG blob with background image */}
-  <div className="absolute inset-0 -z-10">
-    <img
-      src={viit}// Replace with your actual image path
-      alt="Background"
-      className="w-full h-full object-cover opacity-30 dark:opacity-20"
-    />
-  </div>
+      {/* Important Updates Marquee */}
+      <ImportantUpdates />
 
-  <motion.div
-    className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between"
-    initial={{ opacity: 0, y: 50 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-  >
-    <div className="mb-10 md:mb-0 md:w-1/2">
-      <h1 className="text-4xl md:text-5xl font-bold mb-6">
-        Your Campus Notices in One Place
-      </h1>
-      <p className="text-lg mb-6 text-gray-700 dark:text-gray-300">
-        Stay updated with the latest news, events, exams, and placements.
-      </p>
-      <Link to="/all-notices">
-        <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
-          Explore Notices
-        </button>
-      </Link>
-    </div>
-    <div className="md:w-1/2">
-      <img
-        src="src\assets\viit.png" // Replace with your actual image path
-        alt="Notices"
-        className="w-full"
-      />
-    </div>
-  </motion.div>
-</section>
+      {/* Hero Section with image background */}
+      <section className="relative bg-white dark:bg-gray-900 py-20 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 -z-10">
+          <img
+            src={viit} // Replace with your actual image path
+            alt="Background"
+            className="w-full h-full object-cover opacity-30 dark:opacity-20"
+          />
+        </div>
 
+        <motion.div
+          className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          <div className="mb-10 md:mb-0 md:w-1/2">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              Your Campus Notices in One Place
+            </h1>
+            <p className="text-lg mb-6 text-gray-700 dark:text-gray-300">
+              Stay updated with the latest news, events, exams, and placements.
+            </p>
+            <Link to="/all-notices">
+              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+                Explore Notices
+              </button>
+            </Link>
+          </div>
+          <motion.div
+            className="md:w-1/2"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+          >
+            <img
+              src={viit} // Replace with your actual image path
+              alt="Notices"
+              className="w-full rounded-lg shadow-xl transform transition duration-500 hover:scale-105"
+            />
+          </motion.div>
+        </motion.div>
+      </section>
 
       {/* Latest Notices */}
       <section className="py-16 bg-gray-50 dark:bg-gray-800">
@@ -79,10 +86,16 @@ const Home = () => {
               className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 1 }}
             >
               {latestNotices.map((notice) => (
-                <NoticeCard key={notice.id} notice={notice} />
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                  key={notice.id}
+                >
+                  <NoticeCard notice={notice} />
+                </motion.div>
               ))}
             </motion.div>
           )}
@@ -101,4 +114,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Home;
