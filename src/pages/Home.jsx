@@ -1,170 +1,104 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
-import { collection, onSnapshot, query } from "firebase/firestore";
-
-const categories = ["All", "Exams", "Events", "General", "Placements"];
-
+import NoticeCard from "../components/NoticeCard";
+import { motion } from "framer-motion";
+import viit from "../assets/viit.png"; 
 const Home = () => {
-  const [notices, setNotices] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortBy, setSortBy] = useState("newest");
-  const [loading, setLoading] = useState(true);
+  const [latestNotices, setLatestNotices] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, "notices"));
+    const q = query(collection(db, "notices"), orderBy("createdAt", "desc"), limit(3));
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const fetchedNotices = snapshot.docs.map((doc) => ({
+      const notices = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setNotices(fetchedNotices);
-      setLoading(false);
+      setLatestNotices(notices);
     });
 
     return () => unsubscribe();
   }, []);
 
-  const filteredNotices = notices
-    .filter((notice) => {
-      const matchesCategory =
-        selectedCategory === "All" || notice.category === selectedCategory;
-      const matchesSearch =
-        notice.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        notice.description?.toLowerCase().includes(searchTerm.toLowerCase());
-      return matchesCategory && matchesSearch;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "newest":
-          return b.createdAt?.seconds - a.createdAt?.seconds;
-        case "oldest":
-          return a.createdAt?.seconds - b.createdAt?.seconds;
-        case "titleAZ":
-          return a.title.localeCompare(b.title);
-        case "titleZA":
-          return b.title.localeCompare(a.title);
-        case "descAZ":
-          return a.description.localeCompare(b.description);
-        case "descZA":
-          return b.description.localeCompare(a.description);
-        default:
-          return 0;
-      }
-    });
-
-  const formatDate = (timestamp) => {
-    if (!timestamp) return "";
-    const date = timestamp.toDate();
-    return date.toLocaleString();
-  };
-
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-6 px-4 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto">
-        {/* Filters */}
-        <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-1 rounded-full text-sm font-medium border transition ${
-                  selectedCategory === cat
-                    ? "bg-blue-600 text-white border-blue-600"
-                    : "bg-white dark:bg-gray-800 text-blue-600 border-blue-400 dark:text-blue-400 dark:border-blue-500"
-                } hover:bg-blue-500 hover:text-white dark:hover:bg-blue-600`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+      
+   {/* Hero Section with image background */}
+<section className="relative bg-white dark:bg-gray-900 py-20 overflow-hidden">
+  {/* Replace SVG blob with background image */}
+  <div className="absolute inset-0 -z-10">
+    <img
+      src={viit}// Replace with your actual image path
+      alt="Background"
+      className="w-full h-full object-cover opacity-30 dark:opacity-20"
+    />
+  </div>
 
-          {/* Sort by dropdown */}
-          <div className="flex gap-2 items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Sort by:
-            </label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded px-2 py-1 text-sm"
+  <motion.div
+    className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between"
+    initial={{ opacity: 0, y: 50 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8 }}
+  >
+    <div className="mb-10 md:mb-0 md:w-1/2">
+      <h1 className="text-4xl md:text-5xl font-bold mb-6">
+        Your Campus Notices in One Place
+      </h1>
+      <p className="text-lg mb-6 text-gray-700 dark:text-gray-300">
+        Stay updated with the latest news, events, exams, and placements.
+      </p>
+      <Link to="/all-notices">
+        <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+          Explore Notices
+        </button>
+      </Link>
+    </div>
+    <div className="md:w-1/2">
+      <img
+        src="src\assets\viit.png" // Replace with your actual image path
+        alt="Notices"
+        className="w-full"
+      />
+    </div>
+  </motion.div>
+</section>
+
+
+      {/* Latest Notices */}
+      <section className="py-16 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-center mb-8">Latest Notices</h2>
+
+          {latestNotices.length === 0 ? (
+            <p className="text-center text-gray-500 dark:text-gray-400">
+              No recent notices available.
+            </p>
+          ) : (
+            <motion.div
+              className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6 }}
             >
-              <option value="newest">Newest</option>
-              <option value="oldest">Oldest</option>
-              <option value="titleAZ">Title A-Z</option>
-              <option value="titleZA">Title Z-A</option>
-              <option value="descAZ">Description A-Z</option>
-              <option value="descZA">Description Z-A</option>
-            </select>
+              {latestNotices.map((notice) => (
+                <NoticeCard key={notice.id} notice={notice} />
+              ))}
+            </motion.div>
+          )}
+
+          {/* View All Button */}
+          <div className="text-center mt-10">
+            <Link to="/all-notices">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
+                View All Notices
+              </button>
+            </Link>
           </div>
         </div>
-
-        {/* Search */}
-        <div className="flex justify-center mb-6">
-          <input
-            type="text"
-            placeholder="🔍 Search by title or description"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full max-w-md px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-full"
-          />
-        </div>
-
-        {/* Notices */}
-        {loading ? (
-          <p className="text-center text-gray-600 dark:text-gray-300">
-            Loading notices...
-          </p>
-        ) : filteredNotices.length === 0 ? (
-          <p className="text-center text-gray-600 dark:text-gray-300">
-            No notices found.
-          </p>
-        ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredNotices.map((notice) => (
-              <div
-                key={notice.id}
-                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow dark:shadow-gray-700 hover:shadow-lg transition"
-              >
-                <div className="mb-2 text-sm text-gray-500 dark:text-gray-400 flex justify-between">
-                  <span>{notice.category}</span>
-                  <span>{formatDate(notice.createdAt)}</span>
-                </div>
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
-                  {notice.title}
-                </h2>
-                <p className="text-gray-600 dark:text-gray-300 mt-2 mb-4">
-                  {notice.description?.length > 100
-                    ? notice.description.slice(0, 100) + "..."
-                    : notice.description}
-                </p>
-
-                {/* File Link */}
-                {notice.fileURL && (
-                  <a
-                    href={notice.fileURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-green-600 dark:text-green-400 underline block mb-2"
-                  >
-                    📎 View Attachment
-                  </a>
-                )}
-
-                <Link to={`/notice/${notice.id}`}>
-                  <button className="text-sm text-blue-600 dark:text-blue-400 underline">
-                    View Full
-                  </button>
-                </Link>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      </section>
     </div>
   );
 };
 
-export default Home;
+export default Home;
