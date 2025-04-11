@@ -9,6 +9,7 @@ import FullView from "./pages/FullView";
 import AdminDashboard from "./pages/AdminDashboard";
 
 import "./index.css";
+import AllNotices from "./pages/AllNotices";
 
 function App() {
   usePushNotification();
@@ -19,6 +20,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/notices" element={<UploadNotice />} />
+        <Route path="/all-notices" element={<AllNotices />} />
         <Route path="/upload-notice" element={<UploadNotice />} />
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/notice/:id" element={<FullView />} />{" "}
