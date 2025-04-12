@@ -17,13 +17,15 @@ const ImportantUpdates = () => {
   }, []);
 
   return (
-    <div className="bg-yellow-100 dark:bg-yellow-800 py-2 px-4 overflow-hidden">
-      <div className="animate-marquee whitespace-nowrap text-sm font-semibold text-yellow-900 dark:text-yellow-100">
-        {updates.map((u, index) => (
-          <span key={u.id} className="inline-block mr-12">
-            🔔 {u.title} - {u.category}
-          </span>
-        ))}
+    <div className="bg-yellow-100 dark:bg-green-900 py-2 px-4 overflow-hidden">
+      <div className="relative w-full">
+        <div className="flex animate-marquee whitespace-nowrap text-sm font-semibold text-yellow-900 dark:text-yellow-100">
+          {updates.concat(updates).map((u, index) => (
+            <span key={index} className="inline-block mr-20">
+              🔔 {u.title} - {u.category}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -29,48 +29,32 @@ const Home = () => {
       <ImportantUpdates />
 
       {/* Hero Section with image background */}
-      <section className="relative bg-white dark:bg-gray-900 py-20 overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 -z-10">
-          <img
-            src={viit} // Replace with your actual image path
-            alt="Background"
-            className="w-full h-full object-cover opacity-30 dark:opacity-20"
-          />
-        </div>
+      <section
+  className="relative w-full min-h-screen bg-center bg-cover flex items-center justify-center text-white"
+  style={{ backgroundImage: `url(${viit})` }}
+>
+  <div className="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-0"></div>
 
-        <motion.div
-          className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-        >
-          <div className="mb-10 md:mb-0 md:w-1/2">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Your Campus Notices in One Place
-            </h1>
-            <p className="text-lg mb-6 text-gray-700 dark:text-gray-300">
-              Stay updated with the latest news, events, exams, and placements.
-            </p>
-            <Link to="/all-notices">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
-                Explore Notices
-              </button>
-            </Link>
-          </div>
-          <motion.div
-            className="md:w-1/2"
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-          >
-            <img
-              src={viit} // Replace with your actual image path
-              alt="Notices"
-              className="w-full rounded-lg shadow-xl transform transition duration-500 hover:scale-105"
-            />
-          </motion.div>
-        </motion.div>
-      </section>
+  <motion.div
+    className="relative z-10 text-center px-4 max-w-2xl"
+    initial={{ opacity: 0, y: 30 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.8 }}
+  >
+    <h1 className="text-4xl md:text-5xl font-bold mb-6">
+      VIIT Campus Notices in One Place
+    </h1>
+    <p className="text-lg mb-6 text-gray-200">
+      Stay updated with the latest news, events, exams, and placements.
+    </p>
+    <Link to="/all-notices">
+      <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+        Explore Notices
+      </button>
+    </Link>
+  </motion.div>
+</section>
+
 
       {/* Latest Notices */}
       <section className="py-16 bg-gray-50 dark:bg-gray-800">
