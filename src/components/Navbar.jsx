@@ -22,7 +22,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="text-xl font-bold">
-          <Link to="/">Project C</Link>
+          <Link to="/">VIIT-tice Board</Link> 
         </div>
 
         {/* Hamburger Icon */}
