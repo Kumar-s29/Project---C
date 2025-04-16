@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { collection, query, orderBy, limit, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  query,
+  orderBy,
+  limit,
+  onSnapshot,
+} from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import NoticeCard from "../components/NoticeCard";
 import { motion } from "framer-motion";
@@ -11,7 +17,11 @@ const Home = () => {
   const [latestNotices, setLatestNotices] = useState([]);
 
   useEffect(() => {
-    const q = query(collection(db, "notices"), orderBy("createdAt", "desc"), limit(3));
+    const q = query(
+      collection(db, "notices"),
+      orderBy("createdAt", "desc"),
+      limit(3)
+    );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const notices = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -30,36 +40,37 @@ const Home = () => {
 
       {/* Hero Section with image background */}
       <section
-  className="relative w-full min-h-screen bg-center bg-cover flex items-center justify-center text-white"
-  style={{ backgroundImage: `url(${viit})` }}
->
-  <div className="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-0"></div>
+        className="relative w-full min-h-screen bg-center bg-cover flex items-center justify-center text-white"
+        style={{ backgroundImage: `url(${viit})` }}
+      >
+        <div className="bg-black bg-opacity-50 w-full h-full absolute top-0 left-0 z-0"></div>
 
-  <motion.div
-    className="relative z-10 text-center px-4 max-w-2xl"
-    initial={{ opacity: 0, y: 30 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8 }}
-  >
-    <h1 className="text-4xl md:text-5xl font-bold mb-6">
-      VIIT Campus Notices in One Place
-    </h1>
-    <p className="text-lg mb-6 text-gray-200">
-      Stay updated with the latest news, events, exams, and placements.
-    </p>
-    <Link to="/all-notices">
-      <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
-        Explore Notices
-      </button>
-    </Link>
-  </motion.div>
-</section>
-
+        <motion.div
+          className="relative z-10 text-center px-4 max-w-2xl"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+            VIIT Campus Notices in One Place
+          </h1>
+          <p className="text-lg mb-6 text-gray-200">
+            Stay updated with the latest news, events, exams, and placements.
+          </p>
+          <Link to="/all-notices">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+              Explore Notices
+            </button>
+          </Link>
+        </motion.div>
+      </section>
 
       {/* Latest Notices */}
       <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8">Latest Notices</h2>
+          <h2 className="text-2xl font-bold text-center mb-8">
+            Latest Notices
+          </h2>
 
           {latestNotices.length === 0 ? (
             <p className="text-center text-gray-500 dark:text-gray-400">

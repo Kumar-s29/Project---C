@@ -6,6 +6,7 @@ import { db } from "../firebase/firebaseConfig";
 const FullView = () => {
   const { id } = useParams();
   const [notice, setNotice] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchNotice = async () => {
@@ -15,20 +16,31 @@ const FullView = () => {
         if (docSnap.exists()) {
           setNotice(docSnap.data());
         } else {
-          console.log("No such notice!");
+          setNotice(false);
         }
       } catch (error) {
         console.error("Error fetching notice:", error);
+        setNotice(false);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchNotice();
   }, [id]);
 
-  if (!notice) {
+  if (loading) {
     return (
       <div className="min-h-screen flex justify-center items-center text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-900">
         Loading notice...
+      </div>
+    );
+  }
+
+  if (!notice) {
+    return (
+      <div className="min-h-screen flex justify-center items-center text-red-500 dark:text-red-400 bg-gray-100 dark:bg-gray-900">
+        Notice not found or has been deleted.
       </div>
     );
   }
@@ -47,34 +59,6 @@ const FullView = () => {
         <p className="text-gray-700 dark:text-gray-200 text-lg mb-6 whitespace-pre-wrap">
           {notice.description}
         </p>
-
-        {notice.fileURL && (
-          <div className="mt-8">
-            <h2 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300 text-center">
-              Attached PDF Preview
-            </h2>
-            <div className="w-full h-[500px] border dark:border-gray-700 rounded-lg overflow-hidden shadow">
-              <iframe
-                src={notice.fileURL}
-                title="PDF Preview"
-                width="100%"
-                height="100%"
-                className="rounded"
-              ></iframe>
-            </div>
-
-            <div className="mt-4 text-center">
-              <a
-                href={notice.fileURL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block text-blue-600 dark:text-blue-400 underline"
-              >
-                Download/View Full PDF
-              </a>
-            </div>
-          </div>
-        )}
 
         <div className="mt-10 text-center">
           <button
