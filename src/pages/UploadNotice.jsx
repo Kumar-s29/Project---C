@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { db, storage } from "../firebase/firebaseConfig";
+import { db } from "../firebase/firebaseConfig";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const UploadNotice = () => {
   const [notice, setNotice] = useState({
@@ -30,13 +29,21 @@ const UploadNotice = () => {
 
     try {
       if (notice.file) {
-        const fileRef = ref(
-          storage,
-          `notices/${Date.now()}_${notice.file.name}`
-        );
-        const snapshot = await uploadBytes(fileRef, notice.file);
-        fileURL = await getDownloadURL(snapshot.ref);
-        console.log("File uploaded to:", fileURL);
+        const formData = new FormData();
+        formData.append("file", notice.file);
+
+        const res = await fetch("http://localhost:5000/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (data.url) {
+          fileURL = data.url;
+          console.log("PDF uploaded via backend to Cloudinary:", fileURL);
+        } else {
+          throw new Error("File upload failed");
+        }
       }
     } catch (uploadError) {
       console.error("Error uploading file:", uploadError);
@@ -59,7 +66,7 @@ const UploadNotice = () => {
         title: "",
         category: "",
         description: "",
-        fileURL: fileURL || null,
+        file: null,
       });
 
       document.querySelector('input[type="file"]').value = "";
@@ -121,17 +128,17 @@ const UploadNotice = () => {
             ></textarea>
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium">
-              Upload File (PDF optional)
-            </label>
-            <input
-              type="file"
-              accept=".pdf"
-              onChange={handleFileChange}
-              className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2"
-            />
-          </div>
+          {/* <div> */}
+          {/* <label className="block mb-1 font-medium"> */}
+          {/* Upload File (PDF optional) */}
+          {/* </label> */}
+          {/* <input */}
+          {/* type="file" */}
+          {/* accept=".pdf" */}
+          {/* onChange={handleFileChange} */}
+          {/* className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2" */}
+          {/* /> */}
+          {/* </div> */}
 
           <button
             type="submit"
