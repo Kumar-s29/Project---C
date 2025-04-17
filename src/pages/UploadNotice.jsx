@@ -79,7 +79,7 @@ const UploadNotice = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 py-10">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 py-10 font-outfit">
       <div className="w-full max-w-2xl bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 rounded-2xl shadow-xl p-8">
         <h2 className="text-2xl font-bold text-blue-600 dark:text-blue-400 mb-6 text-center">
           Upload Notice
