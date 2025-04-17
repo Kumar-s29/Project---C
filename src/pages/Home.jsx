@@ -34,7 +34,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white font-outfit">
       {/* Important Updates Marquee */}
       <ImportantUpdates />
 
@@ -51,14 +51,14 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 font-outfit">
             VIIT Campus Notices in One Place
           </h1>
-          <p className="text-lg mb-6 text-gray-200">
+          <p className="text-lg mb-6 text-gray-200 font-outfit">
             Stay updated with the latest news, events, exams, and placements.
           </p>
           <Link to="/all-notices">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition font-outfit">
               Explore Notices
             </button>
           </Link>
@@ -68,12 +68,12 @@ const Home = () => {
       {/* Latest Notices */}
       <section className="py-16 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8">
+          <h2 className="text-2xl font-bold text-center mb-8 font-outfit">
             Latest Notices
           </h2>
 
           {latestNotices.length === 0 ? (
-            <p className="text-center text-gray-500 dark:text-gray-400">
+            <p className="text-center text-gray-500 dark:text-gray-400 font-outfit">
               No recent notices available.
             </p>
           ) : (
@@ -98,7 +98,7 @@ const Home = () => {
           {/* View All Button */}
           <div className="text-center mt-10">
             <Link to="/all-notices">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition font-outfit">
                 View All Notices
               </button>
             </Link>

@@ -84,7 +84,7 @@ const AllNotices = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-6 px-4 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-6 px-4 transition-colors duration-300 font-outfit">
       <div className="max-w-7xl mx-auto">
         {/* Filters */}
         <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
@@ -108,13 +108,13 @@ const AllNotices = () => {
           </div>
 
           <div className="flex gap-2 items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 font-outfit">
               Sort by:
             </label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded px-2 py-1 text-sm"
+              className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded px-2 py-1 text-sm font-outfit"
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>

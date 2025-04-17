@@ -22,7 +22,7 @@ const PDFViewer = ({ pdfUrl }) => {
         <button
           onClick={() => setPageNumber(pageNumber - 1)}
           disabled={pageNumber <= 1}
-          className="px-3 py-1 bg-blue-600 text-white rounded disabled:opacity-50"
+          className="px-3 py-1 bg-blue-600 text-white dark:text-white rounded disabled:opacity-50"
         >
           Previous
         </button>
@@ -32,7 +32,7 @@ const PDFViewer = ({ pdfUrl }) => {
         <button
           onClick={() => setPageNumber(pageNumber + 1)}
           disabled={pageNumber >= numPages}
-          className="px-3 py-1 bg-blue-600 text-white rounded disabled:opacity-50"
+          className="px-3 py-1 bg-blue-600 text-white dark:text-white rounded disabled:opacity-50"
         >
           Next
         </button>
