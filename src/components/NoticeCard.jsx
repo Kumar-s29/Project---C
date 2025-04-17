@@ -5,8 +5,12 @@ const NoticeCard = ({ notice }) => {
   return (
     <div className="bg-white dark:bg-gray-700 rounded-xl shadow-md p-6 hover:shadow-xl transition font-outfit">
       <h3 className="text-lg font-semibold mb-2 font-outfit">{notice.title}</h3>
-      <p className="text-sm mb-2 text-gray-500 font-outfit">{notice.category}</p>
-      <p className="text-sm mb-4 line-clamp-3 font-outfit">{notice.description}</p>
+      <p className="text-sm mb-2 text-gray-500 font-outfit">
+        {notice.category}
+      </p>
+      <p className="text-sm mb-4 line-clamp-3 font-outfit">
+        {notice.description}
+      </p>
       {/* {notice.fileURL && ( */}
       {/* <a */}
       {/* href={notice.fileURL} */}
