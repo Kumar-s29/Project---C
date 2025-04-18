@@ -12,7 +12,7 @@ exports.sendNoticeNotification = functions.firestore
       notification: {
         title: "📢 New Notice Uploaded!",
         body: newNotice.title || "Check out the latest notice.",
-        icon: "/logo.png", // optional
+        icon: "/logo.png",
       },
     };
 
