@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseConfig";
-import { collection, deleteDoc, doc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 
 const AdminDashboard = () => {
   const [notices, setNotices] = useState([]);
@@ -10,7 +16,6 @@ const AdminDashboard = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [newDescription, setNewDescription] = useState("");
-  const [newFileURL, setNewFileURL] = useState("");
 
   const fetchNotices = async () => {
     try {
@@ -34,7 +39,9 @@ const AdminDashboard = () => {
   };
 
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this notice?");
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this notice?"
+    );
     if (!confirmDelete) return;
 
     try {
@@ -51,7 +58,6 @@ const AdminDashboard = () => {
     setNewTitle(notice.title);
     setNewCategory(notice.category);
     setNewDescription(notice.description || "");
-    setNewFileURL(notice.fileURL || "");
   };
 
   const handleUpdate = async (e) => {
@@ -66,8 +72,8 @@ const AdminDashboard = () => {
       title: newTitle,
       category: newCategory,
       description: newDescription,
-      fileURL: newFileURL,
-      createdAt: selectedNotice.createdAt, // Preserve existing
+      createdAt: selectedNotice.createdAt,
+      fileURL: selectedNotice.fileURL || "",
     };
 
     try {
@@ -78,7 +84,6 @@ const AdminDashboard = () => {
       setNewTitle("");
       setNewCategory("");
       setNewDescription("");
-      setNewFileURL("");
       fetchNotices();
     } catch (error) {
       console.error("Error updating notice:", error);
@@ -117,33 +122,33 @@ const AdminDashboard = () => {
                 <th className="py-3 px-4">Title</th>
                 <th className="py-3 px-4">Category</th>
                 <th className="py-3 px-4">Created At</th>
-                <th className="py-3 px-4">File</th>
                 <th className="py-3 px-4">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="text-center py-6 text-gray-600 dark:text-gray-300">
+                  <td
+                    colSpan="4"
+                    className="text-center py-6 text-gray-600 dark:text-gray-300"
+                  >
                     Loading...
                   </td>
                 </tr>
               ) : (
                 notices.map((n) => (
-                  <tr key={n.id} className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                    <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{n.title}</td>
-                    <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{n.category}</td>
+                  <tr
+                    key={n.id}
+                    className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition"
+                  >
+                    <td className="py-2 px-4 text-gray-800 dark:text-gray-200">
+                      {n.title}
+                    </td>
+                    <td className="py-2 px-4 text-gray-800 dark:text-gray-200">
+                      {n.category}
+                    </td>
                     <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
                       {n.createdAt?.toDate?.()?.toLocaleString() || "--"}
-                    </td>
-                    <td className="py-2 px-4">
-                      {n.fileURL ? (
-                        <a href={n.fileURL} target="_blank" rel="noreferrer" className="text-blue-600 underline dark:text-blue-400">
-                          View File
-                        </a>
-                      ) : (
-                        <span className="text-gray-500 dark:text-gray-400">None</span>
-                      )}
                     </td>
                     <td className="py-2 px-4 space-x-2">
                       <button
@@ -169,10 +174,14 @@ const AdminDashboard = () => {
         {/* Edit Form */}
         {selectedNotice && (
           <div className="mt-10 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">Edit Notice</h2>
+            <h2 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">
+              Edit Notice
+            </h2>
             <form onSubmit={handleUpdate} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Title</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Title
+                </label>
                 <input
                   type="text"
                   value={newTitle}
@@ -181,7 +190,9 @@ const AdminDashboard = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Category</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Category
+                </label>
                 <input
                   type="text"
                   value={newCategory}
@@ -190,21 +201,14 @@ const AdminDashboard = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">Description</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                  Description
+                </label>
                 <textarea
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
                   className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
                 ></textarea>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">File URL</label>
-                <input
-                  type="url"
-                  value={newFileURL}
-                  onChange={(e) => setNewFileURL(e.target.value)}
-                  className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
               </div>
               <div className="flex justify-end">
                 <button
