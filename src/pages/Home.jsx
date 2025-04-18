@@ -12,7 +12,7 @@ import {
 import { db } from "../firebase/firebaseConfig";
 import { motion } from "framer-motion";
 import ImportantUpdates from "../components/ImportantUpdates";
-import viit from "../assets/viit.png";
+import viit from "../assets/viit.jpg";
 
 const Home = () => {
   const [latestNotices, setLatestNotices] = useState([]);
