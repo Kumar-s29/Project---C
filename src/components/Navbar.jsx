@@ -72,7 +72,7 @@ const Navbar = () => {
               to="/login"
               className="bg-white text-blue-600 px-3 py-1 rounded-xl"
             >
-              Login
+              Admin Login
             </Link>
           )}
         </div>
