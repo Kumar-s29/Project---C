@@ -18,11 +18,11 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   return (
-    <nav className="bg-blue-500 dark:bg-gray-900 text-white px-4 py-3">
+    <nav className="bg-sky-400 dark:bg-gray-900 text-black dark:text-white px-4 py-3 font-outfit">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="text-xl font-bold">
-          <Link to="/">VIIT-tice Board</Link> 
+          <Link to="/">VIIT-NB</Link>
         </div>
 
         {/* Hamburger Icon */}
@@ -33,7 +33,7 @@ const Navbar = () => {
         </div>
 
         {/* Links (Desktop) */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-4 font-outfit">
           <Link to="/">Home</Link>
 
           {isAdmin && (

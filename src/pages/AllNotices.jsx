@@ -16,7 +16,6 @@ const AllNotices = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Fetch notices from Firestore
   useEffect(() => {
     const q = query(collection(db, "notices"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -27,11 +26,9 @@ const AllNotices = () => {
       setNotices(fetchedNotices);
       setLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
 
-  // Debounce search input
   const debouncedSetSearch = useMemo(
     () => debounce((value) => setDebouncedSearchTerm(value), 400),
     []
@@ -41,22 +38,25 @@ const AllNotices = () => {
     debouncedSetSearch(searchTerm);
   }, [searchTerm, debouncedSetSearch]);
 
-  // Filter, search, and sort notices
   const filteredNotices = notices
     .filter((notice) => {
       const matchesCategory =
         selectedCategory === "All" || notice.category === selectedCategory;
       const matchesSearch =
-        notice.title?.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
-        notice.description?.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
+        notice.title
+          ?.toLowerCase()
+          .includes(debouncedSearchTerm.toLowerCase()) ||
+        notice.description
+          ?.toLowerCase()
+          .includes(debouncedSearchTerm.toLowerCase());
       return matchesCategory && matchesSearch;
     })
     .sort((a, b) => {
       switch (sortBy) {
         case "newest":
-          return b.createdAt?.seconds - a.createdAt?.seconds;
+          return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
         case "oldest":
-          return a.createdAt?.seconds - b.createdAt?.seconds;
+          return (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0);
         case "titleAZ":
           return a.title.localeCompare(b.title);
         case "titleZA":
@@ -70,19 +70,21 @@ const AllNotices = () => {
       }
     });
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredNotices.length / noticesPerPage);
   const startIndex = (currentPage - 1) * noticesPerPage;
-  const paginatedNotices = filteredNotices.slice(startIndex, startIndex + noticesPerPage);
+  const paginatedNotices = filteredNotices.slice(
+    startIndex,
+    startIndex + noticesPerPage
+  );
 
   const formatDate = (timestamp) => {
-    if (!timestamp) return "";
+    if (!timestamp?.toDate) return "";
     const date = timestamp.toDate();
     return date.toLocaleString();
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-6 px-4 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 py-6 px-4 transition-colors duration-300 font-outfit">
       <div className="max-w-7xl mx-auto">
         {/* Filters */}
         <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
@@ -105,15 +107,14 @@ const AllNotices = () => {
             ))}
           </div>
 
-          {/* Sort */}
           <div className="flex gap-2 items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label className="text-sm font-medium text-gray-700 dark:text-gray-300 font-outfit">
               Sort by:
             </label>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded px-2 py-1 text-sm"
+              className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded px-2 py-1 text-sm font-outfit"
             >
               <option value="newest">Newest</option>
               <option value="oldest">Oldest</option>
@@ -150,51 +151,59 @@ const AllNotices = () => {
           </p>
         ) : (
           <>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {paginatedNotices.map((notice) => (
                 <div
                   key={notice.id}
-                  className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow dark:shadow-gray-700 hover:shadow-lg transition"
+                  className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow hover:shadow-lg transition-shadow duration-300 relative overflow-hidden"
                 >
-                  <div className="mb-2 text-sm text-gray-500 dark:text-gray-400 flex justify-between">
-                    <span>{notice.category}</span>
-                    <span>{formatDate(notice.createdAt)}</span>
+                  {/* Category Badge */}
+                  <span
+                    className={`absolute top-4 right-4 text-xs font-bold px-3 py-1 rounded-full ${
+                      notice.category === "Exams"
+                        ? "bg-blue-100 text-blue-800"
+                        : notice.category === "Placements"
+                        ? "bg-green-100 text-green-800"
+                        : notice.category === "Events"
+                        ? "bg-purple-100 text-purple-800"
+                        : "bg-gray-200 text-gray-800"
+                    }`}
+                  >
+                    {notice.category}
+                  </span>
+
+                  {/* Date */}
+                  <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">
+                    {formatDate(notice.createdAt)}
                   </div>
-                  <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+
+                  {/* Title */}
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                     {notice.title}
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-300 mt-2 mb-4">
-                    {notice.description?.length > 100
-                      ? notice.description.slice(0, 100) + "..."
-                      : notice.description}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-gray-700 dark:text-gray-300 text-sm line-clamp-3 mb-4">
+                    {notice.description}
                   </p>
 
-                  {notice.fileURL && (
-                    <a
-                      href={notice.fileURL}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-green-600 dark:text-green-400 underline block mb-2"
-                    >
-                      📎 View Attachment
-                    </a>
-                  )}
-
-                  <Link to={`/notice/${notice.id}`}>
-                    <button className="text-sm text-blue-600 dark:text-blue-400 underline">
-                      View Full
-                    </button>
+                  {/* Read More */}
+                  <Link
+                    to={`/notice/${notice.id}`}
+                    className="inline-block text-blue-600 dark:text-blue-400 text-sm font-medium hover:underline"
+                  >
+                    Read More →
                   </Link>
                 </div>
               ))}
             </div>
 
             {/* Pagination */}
-            {/* <div className="flex justify-center items-center gap-3 mt-8">
+            <div className="flex justify-center items-center gap-3 mt-8">
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-3 py-1 border rounded dark:text-white disabled:opacity-50"
               >
                 Prev
               </button>
@@ -202,13 +211,15 @@ const AllNotices = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-3 py-1 border rounded dark:text-white disabled:opacity-50"
               >
                 Next
               </button>
-            </div> */}
+            </div>
           </>
         )}
       </div>
