@@ -203,7 +203,7 @@ const AllNotices = () => {
               <button
                 onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-3 py-1 border rounded dark:text-white disabled:opacity-50"
               >
                 Prev
               </button>
@@ -215,7 +215,7 @@ const AllNotices = () => {
                   setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                 }
                 disabled={currentPage === totalPages}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-3 py-1 border rounded dark:text-white disabled:opacity-50"
               >
                 Next
               </button>
