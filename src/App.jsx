@@ -10,12 +10,14 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 import "./index.css";
 import AllNotices from "./pages/AllNotices";
+// import ImportantUpdates from "./components/ImportantUpdates";
 
 function App() {
   usePushNotification();
   return (
     <>
       <Navbar />
+      
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
