@@ -86,7 +86,7 @@ A modern web application built for college students and administrators to upload
 
 - 👨‍💻 [Swayamvarapu Kumara Swamy](https://github.com/Kumar-s29)
 - 👨‍💻 [Srimanthula Sai Thanmai](https://github.com/Thanmai44)
-- 👨‍💻 [Sasanapuri Reshma](https://github.com/)
+- 👨‍💻 [Sasanapuri Reshma](https://github.com/Reshma100304)
 - 👨‍💻 [Challapalli Sai Sudhanv](https://github.com/saisudhanv)
 - 👨‍💻 [Thandra Jaideep](https://github.com/Jaideepthandra)
 ---
