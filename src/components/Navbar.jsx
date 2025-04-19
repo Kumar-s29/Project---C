@@ -25,7 +25,7 @@ const Navbar = () => {
         {/* Logo */}
         <div className="text-xl font-bold flex">
           <img src={viitlogo}className="w-10 mx-5"></img>
-          <div className="mt-2"><Link to="/">VIIT-NB</Link></div>
+          <div className="mt-2"><Link to="/">VIIT - eNOTICE BOARD</Link></div>
         </div>
         {/* Hamburger Icon */}
         <div className="md:hidden">

@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Branding */}
         <div>
-          <h1 className="text-2xl font-bold mb-2">VIIT - NOTICE BOARD</h1>
+          <h1 className="text-2xl font-bold mb-2">VIIT - eNOTICE BOARD</h1>
           <p className="text-sm text-black/70 dark:text-gray-400">
             Stay updated with the latest notices, events, and announcements.
           </p>
@@ -69,7 +69,7 @@ const Footer = () => {
       </div>
 
       <div className="text-center text-sm text-black/60 dark:text-gray-400 mt-10">
-        © {new Date().getFullYear()} VIIT-tice Board. All rights reserved.
+        © {new Date().getFullYear()} VIIT - eNotice Board. All rights reserved. Project By @Team Graduates
       </div>
     </footer>
   );
