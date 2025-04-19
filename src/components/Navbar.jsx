@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-hellloo
-=======
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
@@ -143,4 +140,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
->>>>>>> 385879b03f5d4459bc235f6348769bad77e7919a
