@@ -85,7 +85,7 @@ const Home = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            VIIT Campus Notices in One Place
+           VIIT Notices in One Place
           </h1>
           <p className="text-lg mb-6 text-gray-200">
             Stay updated with the latest news, events, exams, and placements.
