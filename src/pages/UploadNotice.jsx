@@ -7,9 +7,8 @@ const UploadNotice = () => {
     title: "",
     category: "",
     description: "",
-    file: null,
     expiryDate: "",
-    expiryTime: ""
+    expiryTime: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -19,69 +18,37 @@ const UploadNotice = () => {
     setNotice({ ...notice, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    setNotice({ ...notice, file: e.target.files[0] });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    let fileURL = null;
-
-    try {
-      if (notice.file) {
-        const formData = new FormData();
-        formData.append("file", notice.file);
-
-        const res = await fetch("http://localhost:5000/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        const data = await res.json();
-        if (data.url) {
-          fileURL = data.url;
-          console.log("PDF uploaded via backend to Cloudinary:", fileURL);
-        } else {
-          throw new Error("File upload failed");
-        }
-      }
-    } catch (uploadError) {
-      console.error("Error uploading file:", uploadError);
-      alert("File upload failed. Please try again.");
-      setLoading(false);
-      return;
-    }
 
     try {
       await addDoc(collection(db, "notices"), {
         title: notice.title,
         category: notice.category,
         description: notice.description,
-        fileURL: fileURL || null,
         createdAt: serverTimestamp(),
-        expiryDate: new Date(`${notice.expiryDate}T${notice.expiryTime}`).toISOString(),
-        status: "active"
+        expiryDate: new Date(
+          `${notice.expiryDate}T${notice.expiryTime}`
+        ).toISOString(),
+        status: "active",
       });
 
       alert("Notice uploaded successfully!");
+
       setNotice({
         title: "",
         category: "",
         description: "",
-        file: null,
         expiryDate: "",
         expiryTime: "",
       });
-
-      document.querySelector('input[type="file"]').value = "";
     } catch (error) {
       console.error("Error uploading notice:", error);
       alert("Failed to upload notice. Try again.");
+    } finally {
+      setLoading(false); // Reset loading state
     }
-
-    setLoading(false);
   };
 
   return (
@@ -133,7 +100,7 @@ const UploadNotice = () => {
                 value={notice.expiryDate}
                 onChange={handleChange}
                 required
-                min={new Date().toISOString().split('T')[0]}
+                min={new Date().toISOString().split("T")[0]}
                 className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2"
               />
             </div>
@@ -162,18 +129,6 @@ const UploadNotice = () => {
               placeholder="Enter notice description"
             ></textarea>
           </div>
-
-          {/* <div> */}
-          {/* <label className="block mb-1 font-medium"> */}
-          {/* Upload File (PDF optional) */}
-          {/* </label> */}
-          {/* <input */}
-          {/* type="file" */}
-          {/* accept=".pdf" */}
-          {/* onChange={handleFileChange} */}
-          {/* className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2" */}
-          {/* /> */}
-          {/* </div> */}
 
           <button
             type="submit"

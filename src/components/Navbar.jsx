@@ -5,7 +5,6 @@ import { useTheme } from "../context/ThemeContext";
 import { Menu, X, Moon, Sun } from "lucide-react";
 import viitlogo from "../assets/viitlogo.png";
 
-
 const Navbar = () => {
   const { isAdmin, logout } = useAuth();
   const { darkMode, setDarkMode } = useTheme();
@@ -24,9 +23,12 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="text-xl font-bold flex">
-          <img src={viitlogo}className="w-10 mx-5"></img>
-          <div className="mt-2"><Link to="/">VIIT - eNOTICE BOARD</Link></div>
+          <img src={viitlogo} className="w-10 mx-5" alt="VIIT Logo" />
+          <div className="mt-2">
+            <Link to="/">VIIT - eNOTICE BOARD</Link>
+          </div>
         </div>
+
         {/* Hamburger Icon */}
         <div className="md:hidden">
           <button onClick={toggleMenu}>
@@ -111,9 +113,9 @@ const Navbar = () => {
               setDarkMode(!darkMode);
               toggleMenu();
             }}
-            className="bg-white dark:bg-black text-black dark:text-yellow-300 px-3 py-1 rounded-xl"
+            className="bg-white dark:bg-black text-black dark:text-yellow-300 px-3 py-1 rounded-xl flex items-center justify-center"
           >
-            {darkMode ? "Light Mode" : "Dark Mode"}
+            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
 
           {isAdmin ? (
