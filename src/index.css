@@ -16,17 +16,17 @@
 .animate-marquee {
   display: inline-block;
   white-space: nowrap;
-
   animation: marquee 15s linear infinite;
   padding-right: 50px;
-  @font-face {
-    font-family: "Winky Rough";
-    src: url("/fonts/WinkyRough.woff2") format("woff2");
-    font-weight: normal;
-    font-style: normal;
-  }
+}
 
-  body {
-    @apply font-outfit;
-  }
+@font-face {
+  font-family: "Winky Rough";
+  src: url("/fonts/WinkyRough.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  @apply font-outfit;
 }

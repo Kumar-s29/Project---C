@@ -21,7 +21,43 @@ const Home = () => {
     events: 0,
     placements: 0,
     general: 0,
+    academic: 0,
+    sports: 0,
+    cultural: 0
   });
+
+  useEffect(() => {
+    const getCategoryCount = async (category) => {
+      const q = query(
+        collection(db, "notices"),
+        where("category", "==", category)
+      );
+      const snapshot = await getCountFromServer(q);
+      return snapshot.data().count;
+    };
+
+    const fetchCategoryCounts = async () => {
+      const examsCount = await getCategoryCount("Exams");
+      const eventsCount = await getCategoryCount("Events");
+      const placementsCount = await getCategoryCount("Placements");
+      const generalCount = await getCategoryCount("General");
+      const academicCount = await getCategoryCount("Academic");
+      const sportsCount = await getCategoryCount("Sports");
+      const culturalCount = await getCategoryCount("Cultural");
+
+      setCategoryCounts({
+        exams: examsCount,
+        events: eventsCount,
+        placements: placementsCount,
+        general: generalCount,
+        academic: academicCount,
+        sports: sportsCount,
+        cultural: culturalCount
+      });
+    };
+
+    fetchCategoryCounts();
+  }, []);
 
   useEffect(() => {
     const q = query(
@@ -40,33 +76,6 @@ const Home = () => {
     });
 
     return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const getCategoryCount = async (category) => {
-      const q = query(
-        collection(db, "notices"),
-        where("category", "==", category)
-      );
-      const snapshot = await getCountFromServer(q);
-      return snapshot.data().count;
-    };
-
-    const fetchCategoryCounts = async () => {
-      const examsCount = await getCategoryCount("Exams");
-      const eventsCount = await getCategoryCount("Events");
-      const placementsCount = await getCategoryCount("Placements");
-      const generalCount = await getCategoryCount("General");
-
-      setCategoryCounts({
-        exams: examsCount,
-        events: eventsCount,
-        placements: placementsCount,
-        general: generalCount,
-      });
-    };
-
-    fetchCategoryCounts();
   }, []);
 
   return (
@@ -151,7 +160,7 @@ const Home = () => {
                       Events
                     </h3>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                      Workshops, seminars & functions
+                      Technical Workshops & seminars
                     </p>
                   </div>
                 </div>
@@ -176,7 +185,7 @@ const Home = () => {
                       Placements
                     </h3>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                      Jobs, internships & drives
+                      Campus Drives, Jobs & Internships
                     </p>
                   </div>
                 </div>
@@ -201,7 +210,7 @@ const Home = () => {
                       General
                     </h3>
                     <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                      Announcements & updates
+                      General announcements
                     </p>
                   </div>
                 </div>
@@ -213,6 +222,83 @@ const Home = () => {
                 </div>
               </div>
             </div>
+
+            {/* Keep the existing Academic, Sports, and Cultural cards */}
+            <div className="bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden shadow rounded-lg border border-gray-200 transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 bg-red-500 rounded-md p-3">
+                    <i className="fas fa-graduation-cap text-white text-xl"></i>
+                  </div>
+                  <div className="ml-5">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                      Academic
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                      Academic notices & updates
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 flex justify-between items-center">
+                  <span className="text-sm font-medium text-red-600 dark:text-red-400">
+                    {categoryCounts.academic} notices
+                  </span>
+                  <i className="fas fa-arrow-right text-gray-500 dark:text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+
+            {/* Sports */}
+            <div className="bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden shadow rounded-lg border border-gray-200 transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 bg-orange-500 rounded-md p-3">
+                    <i className="fas fa-running text-white text-xl"></i>
+                  </div>
+                  <div className="ml-5">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                      Sports
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                      Sports events & activities
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 flex justify-between items-center">
+                  <span className="text-sm font-medium text-orange-600 dark:text-orange-400">
+                    {categoryCounts.sports} notices
+                  </span>
+                  <i className="fas fa-arrow-right text-gray-500 dark:text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+
+            {/* Cultural */}
+            <div className="bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden shadow rounded-lg border border-gray-200 transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 bg-pink-500 rounded-md p-3">
+                    <i className="fas fa-theater-masks text-white text-xl"></i>
+                  </div>
+                  <div className="ml-5">
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                      Cultural
+                    </h3>
+                    <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                      Cultural events & activities
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-4 flex justify-between items-center">
+                  <span className="text-sm font-medium text-pink-600 dark:text-pink-400">
+                    {categoryCounts.cultural} notices
+                  </span>
+                  <i className="fas fa-arrow-right text-gray-500 dark:text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+
+            {/* Remove the Technical category card from the grid */}
           </div>
         </div>
       </section>
