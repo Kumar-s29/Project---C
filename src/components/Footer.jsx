@@ -1,6 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaFacebook, FaInstagram, FaLinkedin, FaMailBulk, FaTwitter, FaYoutube } from "react-icons/fa";
+import {
+  FaFacebook,
+  FaInstagram,
+  FaLinkedin,
+  FaMailBulk,
+  FaTwitter,
+  FaYoutube,
+} from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -28,10 +35,10 @@ const Footer = () => {
             </li>
             <li>
               <Link
-                to="/upload-notice"
+                to="/all-notices"
                 className="hover:text-red-300 dark:hover:text-red-400"
               >
-                Upload Notice
+                Explore Notice
               </Link>
             </li>
             <li>
@@ -49,27 +56,35 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-3">Connect with us</h3>
           <div className="flex space-x-4 text-xl">
-            <a href="https://www.instagram.com/vignan_viit_vizag?igsh=MTdiamdheWhoaDUwag==" className="hover:text-red-400">
+            <a
+              href="https://www.instagram.com/vignan_viit_vizag?igsh=MTdiamdheWhoaDUwag=="
+              className="hover:text-red-400"
+            >
               <FaInstagram />
             </a>
-            <a href="https://www.linkedin.com/school/vignanvizag/" className="hover:text-red-400">
+            <a
+              href="https://www.linkedin.com/school/vignanvizag/"
+              className="hover:text-red-400"
+            >
               <FaLinkedin />
             </a>
-            <a href="https://youtube.com/@vignanvizagstudio?si=Ie0qwPBW0Lysqa8m" className="hover:text-red-400">
+            <a
+              href="https://youtube.com/@vignanvizagstudio?si=Ie0qwPBW0Lysqa8m"
+              className="hover:text-red-400"
+            >
               <FaYoutube />
             </a>
             <a href="mailto:vignaniit@yahoo.com" className="hover:text-red-400">
               <FaMailBulk />
             </a>
-            
           </div>
           <p className="text-sm mt-3">vignaniit@yahoo.com</p>
-          
         </div>
       </div>
 
       <div className="text-center text-sm text-black/60 dark:text-gray-400 mt-10">
-        © {new Date().getFullYear()} VIIT - eNotice Board. All rights reserved. Project By @Team Graduates
+        © {new Date().getFullYear()} VIIT - eNotice Board. All rights reserved.
+        Project By @Team Graduates
       </div>
     </footer>
   );
