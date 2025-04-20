@@ -6,16 +6,16 @@
 @tailwind utilities;
 
 @keyframes marquee {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
   
   .animate-marquee {
     display: inline-block;
     white-space: nowrap;
-    animation: marquee 35s linear infinite;
-  }
 
+    animation: marquee 15s linear infinite;
+    padding-right: 50px;
   @font-face {
     font-family: "Winky Rough";
     src: url("/fonts/WinkyRough.woff2") format("woff2");
