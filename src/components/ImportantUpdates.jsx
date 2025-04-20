@@ -7,10 +7,12 @@ const ImportantUpdates = () => {
 
   useEffect(() => {
     const fetchImportantUpdates = async () => {
-      const q = query(collection(db, "notices"), orderBy("createdAt", "desc"), limit(5));
+      const q = query(collection(db, "notices"), orderBy("createdAt", "desc"), limit(20));
       const snap = await getDocs(q);
       const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setUpdates(data);
+      const now = new Date().getTime();
+      const activeNotices = data.filter(notice => !notice.expiryDate || new Date(notice.expiryDate) > now);
+      setUpdates(activeNotices.slice(0, 5));
     };
 
     fetchImportantUpdates();

@@ -24,13 +24,29 @@ const AdminDashboard = () => {
         id: doc.id,
         ...doc.data(),
       }));
-
-      const counts = fetched.reduce((acc, notice) => {
+  
+      // Delete expired notices
+      const now = new Date();
+      const expiredNotices = fetched.filter(notice => 
+        notice.expiryDate && new Date(notice.expiryDate) < now
+      );
+  
+      // Delete expired notices from Firestore
+      await Promise.all(expiredNotices.map(notice => 
+        deleteDoc(doc(db, "notices", notice.id))
+      ));
+  
+      // Filter out expired notices and sort by createdAt timestamp
+      const activeNotices = fetched
+        .filter(notice => !notice.expiryDate || new Date(notice.expiryDate) >= now)
+        .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+  
+      const counts = activeNotices.reduce((acc, notice) => {
         acc[notice.category] = (acc[notice.category] || 0) + 1;
         return acc;
       }, {});
-
-      setNotices(fetched);
+  
+      setNotices(activeNotices);
       setCategoryCounts(counts);
       setLoading(false);
     } catch (error) {
@@ -115,21 +131,23 @@ const AdminDashboard = () => {
         </div>
 
         {/* Notices Table */}
-        <div className="overflow-hidden bg-gray-50 dark:bg-gray-700 shadow rounded-lg">
-          <table className="min-w-full text-left">
+        <div className="overflow-x-auto bg-gray-50 dark:bg-gray-700 shadow rounded-lg">
+          <table className="min-w-full text-left whitespace-nowrap">
             <thead className="bg-indigo-600 text-white">
               <tr>
-                <th className="py-3 px-4">Title</th>
-                <th className="py-3 px-4">Category</th>
-                <th className="py-3 px-4">Created At</th>
-                <th className="py-3 px-4">Actions</th>
+                <th className="py-3 px-4 min-w-[200px]">Title</th>
+                <th className="py-3 px-4 min-w-[120px]">Category</th>
+                <th className="py-3 px-4 min-w-[180px]">Created At</th>
+                <th className="py-3 px-4 min-w-[120px]">Expiry Date</th>
+                <th className="py-3 px-4 min-w-[120px]">Expiry Time</th>
+                <th className="py-3 px-4 min-w-[160px]">Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
                   <td
-                    colSpan="4"
+                    colSpan="5"
                     className="text-center py-6 text-gray-600 dark:text-gray-300"
                   >
                     Loading...
@@ -149,6 +167,12 @@ const AdminDashboard = () => {
                     </td>
                     <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
                       {n.createdAt?.toDate?.()?.toLocaleString() || "--"}
+                    </td>
+                    <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                      {n.expiryDate ? new Date(n.expiryDate).toLocaleDateString() : "--"}
+                    </td>
+                    <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                      {n.expiryDate ? new Date(n.expiryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : "--"}
                     </td>
                     <td className="py-2 px-4 space-x-2">
                       <button

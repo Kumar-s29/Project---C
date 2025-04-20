@@ -4,7 +4,7 @@ import { db } from "../firebase/firebaseConfig";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { debounce } from "lodash";
 
-const categories = ["All", "Exams", "Events", "General", "Placements"];
+const categories = ["All", "Exams", "Events", "Academic", "Sports", "Cultural", "Placements", "General"];
 const noticesPerPage = 6;
 
 const AllNotices = () => {
@@ -49,7 +49,8 @@ const AllNotices = () => {
         notice.description
           ?.toLowerCase()
           .includes(debouncedSearchTerm.toLowerCase());
-      return matchesCategory && matchesSearch;
+      const isNotExpired = notice.expiryDate ? new Date(notice.expiryDate) > new Date() : true;
+      return matchesCategory && matchesSearch && isNotExpired;
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -166,6 +167,12 @@ const AllNotices = () => {
                         ? "bg-green-100 text-green-800"
                         : notice.category === "Events"
                         ? "bg-purple-100 text-purple-800"
+                        : notice.category === "Academic"
+                        ? "bg-yellow-100 text-yellow-800"
+                        : notice.category === "Sports"
+                        ? "bg-red-100 text-red-800"
+                        : notice.category === "Cultural"
+                        ? "bg-pink-100 text-pink-800"
                         : "bg-gray-200 text-gray-800"
                     }`}
                   >

@@ -27,14 +27,16 @@ const Home = () => {
     const q = query(
       collection(db, "notices"),
       orderBy("createdAt", "desc"),
-      limit(3)
+      limit(10)
     );
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const notices = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setLatestNotices(notices);
+      const now = new Date().getTime();
+      const activeNotices = notices.filter(notice => !notice.expiryDate || new Date(notice.expiryDate) > now);
+      setLatestNotices(activeNotices.slice(0, 3));
     });
 
     return () => unsubscribe();

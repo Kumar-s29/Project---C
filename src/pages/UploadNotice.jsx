@@ -8,6 +8,8 @@ const UploadNotice = () => {
     category: "",
     description: "",
     file: null,
+    expiryDate: "",
+    expiryTime: ""
   });
 
   const [loading, setLoading] = useState(false);
@@ -59,6 +61,8 @@ const UploadNotice = () => {
         description: notice.description,
         fileURL: fileURL || null,
         createdAt: serverTimestamp(),
+        expiryDate: new Date(`${notice.expiryDate}T${notice.expiryTime}`).toISOString(),
+        status: "active"
       });
 
       alert("Notice uploaded successfully!");
@@ -67,6 +71,8 @@ const UploadNotice = () => {
         category: "",
         description: "",
         file: null,
+        expiryDate: "",
+        expiryTime: "",
       });
 
       document.querySelector('input[type="file"]').value = "";
@@ -111,8 +117,37 @@ const UploadNotice = () => {
               <option value="Exams">Exams</option>
               <option value="Events">Events</option>
               <option value="Placements">Placements</option>
+              <option value="Academic">Academic</option>
+              <option value="Sports">Sports</option>
+              <option value="Cultural">Cultural</option>
               <option value="General">General</option>
             </select>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block mb-1 font-medium">Expiry Date</label>
+              <input
+                type="date"
+                name="expiryDate"
+                value={notice.expiryDate}
+                onChange={handleChange}
+                required
+                min={new Date().toISOString().split('T')[0]}
+                className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2"
+              />
+            </div>
+            <div>
+              <label className="block mb-1 font-medium">Expiry Time</label>
+              <input
+                type="time"
+                name="expiryTime"
+                value={notice.expiryTime}
+                onChange={handleChange}
+                required
+                className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2"
+              />
+            </div>
           </div>
 
           <div>
