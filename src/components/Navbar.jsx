@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import { Menu, X, Moon, Sun } from "lucide-react";
+import viitlogo from "../assets/viitlogo.png";
+
 
 const Navbar = () => {
   const { isAdmin, logout } = useAuth();
@@ -21,10 +23,10 @@ const Navbar = () => {
     <nav className="bg-sky-400 dark:bg-gray-900 text-black dark:text-white px-4 py-3 font-outfit">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="text-xl font-bold">
-          <Link to="/">VIIT-NB</Link>
+        <div className="text-xl font-bold flex">
+          <img src={viitlogo}className="w-10 mx-5"></img>
+          <div className="mt-2"><Link to="/">VIIT - eNOTICE BOARD</Link></div>
         </div>
-
         {/* Hamburger Icon */}
         <div className="md:hidden">
           <button onClick={toggleMenu}>

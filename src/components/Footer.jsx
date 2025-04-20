@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaLinkedin, FaMailBulk, FaTwitter, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Branding */}
         <div>
-          <h1 className="text-2xl font-bold mb-2">VIIT-NB</h1>
+          <h1 className="text-2xl font-bold mb-2">VIIT - eNOTICE BOARD</h1>
           <p className="text-sm text-black/70 dark:text-gray-400">
             Stay updated with the latest notices, events, and announcements.
           </p>
@@ -49,24 +49,27 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold mb-3">Connect with us</h3>
           <div className="flex space-x-4 text-xl">
-            <a href="#" className="hover:text-red-400">
-              <FaFacebook />
-            </a>
-            <a href="#" className="hover:text-red-400">
-              <FaTwitter />
-            </a>
-            <a href="#" className="hover:text-red-400">
+            <a href="https://www.instagram.com/vignan_viit_vizag?igsh=MTdiamdheWhoaDUwag==" className="hover:text-red-400">
               <FaInstagram />
             </a>
-            <a href="#" className="hover:text-red-400">
+            <a href="https://www.linkedin.com/school/vignanvizag/" className="hover:text-red-400">
               <FaLinkedin />
             </a>
+            <a href="https://youtube.com/@vignanvizagstudio?si=Ie0qwPBW0Lysqa8m" className="hover:text-red-400">
+              <FaYoutube />
+            </a>
+            <a href="mailto:vignaniit@yahoo.com" className="hover:text-red-400">
+              <FaMailBulk />
+            </a>
+            
           </div>
+          <p className="text-sm mt-3">vignaniit@yahoo.com</p>
+          
         </div>
       </div>
 
       <div className="text-center text-sm text-black/60 dark:text-gray-400 mt-10">
-        © {new Date().getFullYear()} VIIT-tice Board. All rights reserved.
+        © {new Date().getFullYear()} VIIT - eNotice Board. All rights reserved. Project By @Team Graduates
       </div>
     </footer>
   );
