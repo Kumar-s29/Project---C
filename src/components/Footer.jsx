@@ -78,7 +78,8 @@ const Footer = () => {
               <FaMailBulk />
             </a>
           </div>
-          <p className="text-sm mt-3">vignaniit@yahoo.com</p>
+          <p className="text-sm mt-3">Vignan's Intitute of Information Technology(A),</p>
+          <p>Duvvada, Visakhapatnam-49</p>
         </div>
       </div>
 

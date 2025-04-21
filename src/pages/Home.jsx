@@ -78,6 +78,42 @@ const Home = () => {
     return () => unsubscribe();
   }, []);
 
+  // Replace the first useEffect with this new one
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, "notices"), (snapshot) => {
+      const now = new Date().getTime();
+      const activeNotices = snapshot.docs
+        .map(doc => ({ id: doc.id, ...doc.data() }))
+        .filter(notice => !notice.expiryDate || new Date(notice.expiryDate) > now);
+
+      // Calculate counts for all categories at once
+      const counts = {
+        exams: 0,
+        events: 0,
+        placements: 0,
+        general: 0,
+        academic: 0,
+        sports: 0,
+        cultural: 0
+      };
+
+      activeNotices.forEach(notice => {
+        const category = notice.category?.toLowerCase();
+        if (category in counts) {
+          counts[category]++;
+        }
+      });
+
+      setCategoryCounts(counts);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Remove these functions as they're no longer needed:
+  // - getCategoryCount
+  // - fetchCategoryCounts
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white font-outfit">
       {/* Important Updates Marquee */}

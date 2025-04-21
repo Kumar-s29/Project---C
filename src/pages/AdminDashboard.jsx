@@ -10,6 +10,7 @@ import {
 
 const AdminDashboard = () => {
   const [notices, setNotices] = useState([]);
+  const [expiredNotices, setExpiredNotices] = useState([]); // Add this line
   const [categoryCounts, setCategoryCounts] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedNotice, setSelectedNotice] = useState(null);
@@ -25,21 +26,27 @@ const AdminDashboard = () => {
         ...doc.data(),
       }));
   
-      // Delete expired notices
       const now = new Date();
       const expiredNotices = fetched.filter(notice => 
         notice.expiryDate && new Date(notice.expiryDate) < now
       );
-  
-      // Delete expired notices from Firestore
-      await Promise.all(expiredNotices.map(notice => 
-        deleteDoc(doc(db, "notices", notice.id))
+      
+      // Store expired notices in state (sorted by creation date, newest first)
+      setExpiredNotices(expiredNotices.sort((a, b) => 
+        new Date(b.createdAt?.toDate?.()) - new Date(a.createdAt?.toDate?.())
       ));
+
+      // Remove this section that was deleting expired notices
+      // await Promise.all(expiredNotices.map(notice => 
+      //   deleteDoc(doc(db, "notices", notice.id))
+      // ));
   
-      // Filter out expired notices and sort by createdAt timestamp
+      // Filter active notices and sort by creation date
       const activeNotices = fetched
         .filter(notice => !notice.expiryDate || new Date(notice.expiryDate) >= now)
-        .sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        .sort((a, b) => 
+          new Date(b.createdAt?.toDate?.()) - new Date(a.createdAt?.toDate?.())
+        );
   
       const counts = activeNotices.reduce((acc, notice) => {
         acc[notice.category] = (acc[notice.category] || 0) + 1;
@@ -69,30 +76,54 @@ const AdminDashboard = () => {
     }
   };
 
+  // Add these state variables at the top with other useState declarations
+  const [newExpiryDate, setNewExpiryDate] = useState("");
+  const [newExpiryTime, setNewExpiryTime] = useState("");
+
+  // Update the handleEdit function
   const handleEdit = (notice) => {
     setSelectedNotice(notice);
     setNewTitle(notice.title);
     setNewCategory(notice.category);
     setNewDescription(notice.description || "");
+    
+    // Set expiry date and time if they exist
+    if (notice.expiryDate) {
+      const expiryDateTime = new Date(notice.expiryDate);
+      setNewExpiryDate(expiryDateTime.toISOString().split('T')[0]);
+      setNewExpiryTime(expiryDateTime.toTimeString().slice(0, 5));
+    }
   };
 
+  // Update the handleUpdate function
   const handleUpdate = async (e) => {
     e.preventDefault();
 
     if (!newTitle || !newCategory || !newDescription) {
-      alert("Please fill in all fields.");
+      alert("Please fill in all required fields.");
       return;
     }
 
-    const updatedNotice = {
-      title: newTitle,
-      category: newCategory,
-      description: newDescription,
-      createdAt: selectedNotice.createdAt,
-      fileURL: selectedNotice.fileURL || "",
-    };
-
     try {
+      let expiryDate = null;
+      if (newExpiryDate && newExpiryTime) {
+        expiryDate = new Date(`${newExpiryDate}T${newExpiryTime}`).toISOString();
+      }
+
+      const updatedNotice = {
+        title: newTitle,
+        category: newCategory,
+        description: newDescription,
+        createdAt: selectedNotice.createdAt,
+        expiryDate: expiryDate,
+        fileURL: selectedNotice.fileURL || "",
+        department: selectedNotice.department || "",
+        priority: selectedNotice.priority || "normal",
+        status: selectedNotice.status || "active",
+        attachments: selectedNotice.attachments || [],
+        lastModified: new Date()
+      };
+
       await setDoc(doc(db, "notices", selectedNotice.id), updatedNotice);
       alert("Notice updated successfully!");
 
@@ -100,9 +131,12 @@ const AdminDashboard = () => {
       setNewTitle("");
       setNewCategory("");
       setNewDescription("");
+      setNewExpiryDate("");
+      setNewExpiryTime("");
       fetchNotices();
     } catch (error) {
       console.error("Error updating notice:", error);
+      alert(`Failed to update notice: ${error.message}`);
     }
   };
 
@@ -137,7 +171,8 @@ const AdminDashboard = () => {
               <tr>
                 <th className="py-3 px-4 min-w-[200px]">Title</th>
                 <th className="py-3 px-4 min-w-[120px]">Category</th>
-                <th className="py-3 px-4 min-w-[180px]">Created At</th>
+                <th className="py-3 px-4 min-w-[180px]">Created Date</th>
+                <th className="py-3 px-4 min-w-[180px]">Created Time</th>
                 <th className="py-3 px-4 min-w-[120px]">Expiry Date</th>
                 <th className="py-3 px-4 min-w-[120px]">Expiry Time</th>
                 <th className="py-3 px-4 min-w-[160px]">Actions</th>
@@ -166,7 +201,10 @@ const AdminDashboard = () => {
                       {n.category}
                     </td>
                     <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
-                      {n.createdAt?.toDate?.()?.toLocaleString() || "--"}
+                      {n.createdAt?.toDate?.().toLocaleDateString() || "--"}
+                    </td>
+                    <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                      {n.createdAt?.toDate?.().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) || "--"}
                     </td>
                     <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
                       {n.expiryDate ? new Date(n.expiryDate).toLocaleDateString() : "--"}
@@ -193,6 +231,70 @@ const AdminDashboard = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Expired Notices Table */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+            Expired Notices
+          </h2>
+          <div className="overflow-x-auto bg-gray-50 dark:bg-gray-700 shadow rounded-lg">
+            <table className="min-w-full text-left whitespace-nowrap">
+              <thead className="bg-red-600 text-white">
+                <tr>
+                  <th className="py-3 px-4 min-w-[200px]">Title</th>
+                  <th className="py-3 px-4 min-w-[120px]">Category</th>
+                  <th className="py-3 px-4 min-w-[180px]">Created Date</th>
+                  <th className="py-3 px-4 min-w-[180px]">Created Time</th>
+                  <th className="py-3 px-4 min-w-[120px]">Expiry Date</th>
+                  <th className="py-3 px-4 min-w-[120px]">Expiry Time</th>
+                  <th className="py-3 px-4 min-w-[160px]">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-gray-300">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : expiredNotices.length === 0 ? (
+                  <tr>
+                    <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-gray-300">
+                      No expired notices
+                    </td>
+                  </tr>
+                ) : (
+                  expiredNotices.map((n) => (
+                    <tr key={n.id} className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                      <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{n.title}</td>
+                      <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{n.category}</td>
+                      <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                        {n.createdAt?.toDate?.().toLocaleDateString() || "--"}
+                      </td>
+                      <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                        {n.createdAt?.toDate?.().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) || "--"}
+                      </td>
+                      <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                        {n.expiryDate ? new Date(n.expiryDate).toLocaleDateString() : "--"}
+                      </td>
+                      <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                        {n.expiryDate ? new Date(n.expiryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : "--"}
+                      </td>
+                      <td className="py-2 px-4">
+                        <button
+                          onClick={() => handleDelete(n.id)}
+                          className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Edit Form */}
@@ -234,6 +336,30 @@ const AdminDashboard = () => {
                   className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
                 ></textarea>
               </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Expiry Date
+                  </label>
+                  <input
+                    type="date"
+                    value={newExpiryDate}
+                    onChange={(e) => setNewExpiryDate(e.target.value)}
+                    className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Expiry Time
+                  </label>
+                  <input
+                    type="time"
+                    value={newExpiryTime}
+                    onChange={(e) => setNewExpiryTime(e.target.value)}
+                    className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+              </div>
               <div className="flex justify-end">
                 <button
                   type="submit"
@@ -247,7 +373,7 @@ const AdminDashboard = () => {
         )}
       </div>
     </div>
-  );
-};
+  ); // End of return statement
+}; // End of AdminDashboard component
 
 export default AdminDashboard;
