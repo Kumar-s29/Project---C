@@ -10,7 +10,8 @@ import {
 
 const AdminDashboard = () => {
   const [notices, setNotices] = useState([]);
-  const [expiredNotices, setExpiredNotices] = useState([]); // Add this line
+  const [expiredNotices, setExpiredNotices] = useState([]);
+  const [viewingNotice, setViewingNotice] = useState(null); // Add this line
   const [categoryCounts, setCategoryCounts] = useState({});
   const [loading, setLoading] = useState(true);
   const [selectedNotice, setSelectedNotice] = useState(null);
@@ -214,6 +215,12 @@ const AdminDashboard = () => {
                     </td>
                     <td className="py-2 px-4 space-x-2">
                       <button
+                        onClick={() => setViewingNotice(n)}
+                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
+                      >
+                        View
+                      </button>
+                      <button
                         onClick={() => handleEdit(n)}
                         className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded"
                       >
@@ -283,6 +290,12 @@ const AdminDashboard = () => {
                       </td>
                       <td className="py-2 px-4">
                         <button
+                          onClick={() => setViewingNotice(n)}
+                          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded mr-2"
+                        >
+                          View
+                        </button>
+                        <button
                           onClick={() => handleDelete(n.id)}
                           className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
                         >
@@ -297,83 +310,180 @@ const AdminDashboard = () => {
           </div>
         </div>
 
-        {/* Edit Form */}
+        {/* Remove the old Edit Form section and add this new Edit Notice Modal */}
         {selectedNotice && (
-          <div className="mt-10 bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg">
-            <h2 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 mb-4">
-              Edit Notice
-            </h2>
-            <form onSubmit={handleUpdate} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                  Category
-                </label>
-                <input
-                  type="text"
-                  value={newCategory}
-                  onChange={(e) => setNewCategory(e.target.value)}
-                  className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                  Description
-                </label>
-                <textarea
-                  value={newDescription}
-                  onChange={(e) => setNewDescription(e.target.value)}
-                  className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
-                ></textarea>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    Expiry Date
-                  </label>
-                  <input
-                    type="date"
-                    value={newExpiryDate}
-                    onChange={(e) => setNewExpiryDate(e.target.value)}
-                    className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
-                    Expiry Time
-                  </label>
-                  <input
-                    type="time"
-                    value={newExpiryTime}
-                    onChange={(e) => setNewExpiryTime(e.target.value)}
-                    className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
-                  />
-                </div>
-              </div>
-              <div className="flex justify-end">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                  Edit Notice
+                </h2>
                 <button
-                  type="submit"
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md"
+                  onClick={() => setSelectedNotice(null)}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                 >
-                  Save Changes
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </div>
-            </form>
+
+              <form onSubmit={handleUpdate} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Title
+                  </label>
+                  <input
+                    type="text"
+                    value={newTitle}
+                    onChange={(e) => setNewTitle(e.target.value)}
+                    className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Category
+                  </label>
+                  <input
+                    type="text"
+                    value={newCategory}
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                    Description
+                  </label>
+                  <textarea
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
+                    className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white h-32"
+                  ></textarea>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                      Expiry Date
+                    </label>
+                    <input
+                      type="date"
+                      value={newExpiryDate}
+                      onChange={(e) => setNewExpiryDate(e.target.value)}
+                      className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+                      Expiry Time
+                    </label>
+                    <input
+                      type="time"
+                      value={newExpiryTime}
+                      onChange={(e) => setNewExpiryTime(e.target.value)}
+                      className="w-full p-3 border rounded-md bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-4">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedNotice(null)}
+                    className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white px-6 py-2 rounded-md"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-md"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
-      </div>
-    </div>
-  ); // End of return statement
-}; // End of AdminDashboard component
+        {/* View Notice Modal */}
+                {viewingNotice && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+                      <div className="flex justify-between items-center mb-6">
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                          Notice Details
+                        </h2>
+                        <button
+                          onClick={() => setViewingNotice(null)}
+                          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Title</h3>
+                          <p className="text-lg text-gray-900 dark:text-white">{viewingNotice.title}</p>
+                        </div>
+                        
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Category</h3>
+                          <p className="text-lg text-gray-900 dark:text-white">{viewingNotice.category}</p>
+                        </div>
+                        
+                        <div>
+                          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Description</h3>
+                          <p className="text-lg text-gray-900 dark:text-white whitespace-pre-wrap">
+                            {viewingNotice.description}
+                          </p>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Created Date & Time</h3>
+                            <p className="text-lg text-gray-900 dark:text-white">
+                              {viewingNotice.createdAt?.toDate?.().toLocaleDateString()}{' '}
+                              {viewingNotice.createdAt?.toDate?.().toLocaleTimeString([], { 
+                                hour: '2-digit', 
+                                minute: '2-digit', 
+                                hour12: true 
+                              })}
+                            </p>
+                          </div>
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Expiry Date & Time</h3>
+                            <p className="text-lg text-gray-900 dark:text-white">
+                              {viewingNotice.expiryDate ? (
+                                <>
+                                  {new Date(viewingNotice.expiryDate).toLocaleDateString()}{' '}
+                                  {new Date(viewingNotice.expiryDate).toLocaleTimeString([], {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true
+                                  })}
+                                </>
+                              ) : "--"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-8 flex justify-end">
+                        <button
+                          onClick={() => setViewingNotice(null)}
+                          className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white px-6 py-2 rounded-md"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        };
 
-export default AdminDashboard;
+        export default AdminDashboard;
