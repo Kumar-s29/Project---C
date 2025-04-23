@@ -23,14 +23,20 @@ const UploadNotice = () => {
     setLoading(true);
 
     try {
+      let expiryDateTime = null;
+      
+      if (notice.expiryDate) {
+        // If expiry date is set but no time, default to 23:59
+        const time = notice.expiryTime || '23:59';
+        expiryDateTime = new Date(`${notice.expiryDate}T${time}`).toISOString();
+      }
+
       await addDoc(collection(db, "notices"), {
         title: notice.title,
         category: notice.category,
         description: notice.description,
         createdAt: serverTimestamp(),
-        expiryDate: new Date(
-          `${notice.expiryDate}T${notice.expiryTime}`
-        ).toISOString(),
+        expiryDate: expiryDateTime,
         status: "active",
       });
 
@@ -93,27 +99,31 @@ const UploadNotice = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block mb-1 font-medium">Expiry Date</label>
+              <label className="block mb-1 font-medium">Expiry Date (Optional)</label>
               <input
                 type="date"
                 name="expiryDate"
                 value={notice.expiryDate}
                 onChange={handleChange}
-                required
                 min={new Date().toISOString().split("T")[0]}
                 className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2"
               />
             </div>
             <div>
-              <label className="block mb-1 font-medium">Expiry Time</label>
+              <label className="block mb-1 font-medium">Expiry Time (Optional)</label>
               <input
                 type="time"
                 name="expiryTime"
                 value={notice.expiryTime}
                 onChange={handleChange}
-                required
-                className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2"
+                disabled={!notice.expiryDate}
+                className="w-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed"
               />
+              {notice.expiryDate && !notice.expiryTime && (
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  If no time is set, notice will expire at 11:59 PM
+                </p>
+              )}
             </div>
           </div>
 

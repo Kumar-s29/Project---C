@@ -106,9 +106,12 @@ const AdminDashboard = () => {
     }
 
     try {
-      let expiryDate = null;
-      if (newExpiryDate && newExpiryTime) {
-        expiryDate = new Date(`${newExpiryDate}T${newExpiryTime}`).toISOString();
+      let expiryDateTime = null;
+      
+      if (newExpiryDate) {
+        // If expiry date is set but no time, default to 23:59
+        const time = newExpiryTime || '23:59';
+        expiryDateTime = new Date(`${newExpiryDate}T${time}`).toISOString();
       }
 
       const updatedNotice = {
@@ -116,7 +119,7 @@ const AdminDashboard = () => {
         category: newCategory,
         description: newDescription,
         createdAt: selectedNotice.createdAt,
-        expiryDate: expiryDate,
+        expiryDate: expiryDateTime,
         fileURL: selectedNotice.fileURL || "",
         department: selectedNotice.department || "",
         priority: selectedNotice.priority || "normal",
