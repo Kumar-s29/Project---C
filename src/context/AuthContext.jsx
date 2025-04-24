@@ -19,6 +19,12 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setIsAdmin(false);
     localStorage.removeItem("isAdmin");
+
+    // Prevent back navigation to protected pages
+    window.history.pushState(null, null, window.location.href);
+    window.addEventListener("popstate", function () {
+      window.history.pushState(null, null, window.location.href);
+    });
   };
 
   return (

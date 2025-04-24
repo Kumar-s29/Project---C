@@ -13,7 +13,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/", { replace: true });
   };
 
   const toggleMenu = () => setIsOpen(!isOpen);
