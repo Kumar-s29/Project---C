@@ -170,95 +170,17 @@ const AdminDashboard = () => {
 
         {/* Notices Table */}
         <div className="overflow-x-auto bg-gray-50 dark:bg-gray-700 shadow rounded-lg">
-          <table className="min-w-full text-left whitespace-nowrap">
-            <thead className="bg-indigo-600 text-white">
-              <tr>
-                <th className="py-3 px-4 min-w-[200px]">Title</th>
-                <th className="py-3 px-4 min-w-[120px]">Category</th>
-                <th className="py-3 px-4 min-w-[180px]">Created Date</th>
-                <th className="py-3 px-4 min-w-[180px]">Created Time</th>
-                <th className="py-3 px-4 min-w-[120px]">Expiry Date</th>
-                <th className="py-3 px-4 min-w-[120px]">Expiry Time</th>
-                <th className="py-3 px-4 min-w-[160px]">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td
-                    colSpan="5"
-                    className="text-center py-6 text-gray-600 dark:text-gray-300"
-                  >
-                    Loading...
-                  </td>
-                </tr>
-              ) : (
-                notices.map((n) => (
-                  <tr
-                    key={n.id}
-                    className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition"
-                  >
-                    <td className="py-2 px-4 text-gray-800 dark:text-gray-200">
-                      {n.title}
-                    </td>
-                    <td className="py-2 px-4 text-gray-800 dark:text-gray-200">
-                      {n.category}
-                    </td>
-                    <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
-                      {n.createdAt?.toDate?.().toLocaleDateString() || "--"}
-                    </td>
-                    <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
-                      {n.createdAt?.toDate?.().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) || "--"}
-                    </td>
-                    <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
-                      {n.expiryDate ? new Date(n.expiryDate).toLocaleDateString() : "--"}
-                    </td>
-                    <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
-                      {n.expiryDate ? new Date(n.expiryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : "--"}
-                    </td>
-                    <td className="py-2 px-4 space-x-2">
-                      <button
-                        onClick={() => setViewingNotice(n)}
-                        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
-                      >
-                        View
-                      </button>
-                      <button
-                        onClick={() => handleEdit(n)}
-                        className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(n.id)}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Expired Notices Table */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
-            Expired Notices
-          </h2>
-          <div className="overflow-x-auto bg-gray-50 dark:bg-gray-700 shadow rounded-lg">
+          <div className="max-h-[330px] overflow-y-auto">
             <table className="min-w-full text-left whitespace-nowrap">
-              <thead className="bg-red-600 text-white">
+              <thead className="bg-indigo-600 text-white sticky top-0 z-10">
                 <tr>
-                  <th className="py-3 px-4 min-w-[200px]">Title</th>
-                  <th className="py-3 px-4 min-w-[120px]">Category</th>
-                  <th className="py-3 px-4 min-w-[180px]">Created Date</th>
-                  <th className="py-3 px-4 min-w-[180px]">Created Time</th>
-                  <th className="py-3 px-4 min-w-[120px]">Expiry Date</th>
-                  <th className="py-3 px-4 min-w-[120px]">Expiry Time</th>
-                  <th className="py-3 px-4 min-w-[160px]">Actions</th>
+                  <th className="py-3 px-4 w-[300px] max-w-[300px] text-center">Title</th>
+                  <th className="py-3 px-4 min-w-[120px] text-center">Category</th>
+                  <th className="py-3 px-4 min-w-[180px] text-center">Created Date</th>
+                  <th className="py-3 px-4 min-w-[180px] text-center">Created Time</th>
+                  <th className="py-3 px-4 min-w-[120px] text-center">Expiry Date</th>
+                  <th className="py-3 px-4 min-w-[120px] text-center">Expiry Time</th>
+                  <th className="py-3 px-4 min-w-[160px] text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -268,27 +190,23 @@ const AdminDashboard = () => {
                       Loading...
                     </td>
                   </tr>
-                ) : expiredNotices.length === 0 ? (
-                  <tr>
-                    <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-gray-300">
-                      No expired notices
-                    </td>
-                  </tr>
                 ) : (
-                  expiredNotices.map((n) => (
+                  notices.map((n) => (
                     <tr key={n.id} className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                      <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{n.title}</td>
-                      <td className="py-2 px-4 text-gray-800 dark:text-gray-200">{n.category}</td>
-                      <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                      <td className="py-2 px-4 w-[200px] max-w-[200px] truncate" title={n.title}>
+                        {n.title}
+                      </td>
+                      <td className="py-2 px-4 text-center">{n.category}</td>
+                      <td className="py-2 px-4 text-center">
                         {n.createdAt?.toDate?.().toLocaleDateString() || "--"}
                       </td>
-                      <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                      <td className="py-2 px-4 text-center">
                         {n.createdAt?.toDate?.().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) || "--"}
                       </td>
-                      <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                      <td className="py-2 px-4 text-center">
                         {n.expiryDate ? new Date(n.expiryDate).toLocaleDateString() : "--"}
                       </td>
-                      <td className="py-2 px-4 text-gray-600 dark:text-gray-300">
+                      <td className="py-2 px-4 text-center">
                         {n.expiryDate ? new Date(n.expiryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : "--"}
                       </td>
                       <td className="py-2 px-4">
@@ -297,6 +215,12 @@ const AdminDashboard = () => {
                           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded mr-2"
                         >
                           View
+                        </button>
+                        <button
+                          onClick={() => handleEdit(n)}
+                          className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded mr-2"
+                        >
+                          Edit
                         </button>
                         <button
                           onClick={() => handleDelete(n.id)}
@@ -310,6 +234,86 @@ const AdminDashboard = () => {
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* Expired Notices Table */}
+        <div className="mt-12">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+            Expired Notices
+          </h2>
+          <div className="overflow-x-auto bg-gray-50 dark:bg-gray-700 shadow rounded-lg">
+            <div className="max-h-[330px] overflow-y-auto">
+              <table className="min-w-full text-left whitespace-nowrap">
+                <thead className="bg-red-600 text-white sticky top-0 z-10">
+                  <tr>
+                    <th className="py-3 px-4 w-[300px] max-w-[300px] text-center">Title</th>
+                    <th className="py-3 px-4 min-w-[120px] text-center">Category</th>
+                    <th className="py-3 px-4 min-w-[180px] text-center">Created Date</th>
+                    <th className="py-3 px-4 min-w-[180px] text-center">Created Time</th>
+                    <th className="py-3 px-4 min-w-[120px] text-center">Expiry Date</th>
+                    <th className="py-3 px-4 min-w-[120px] text-center">Expiry Time</th>
+                    <th className="py-3 px-4 min-w-[160px] text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-gray-300">
+                        Loading...
+                      </td>
+                    </tr>
+                  ) : expiredNotices.length === 0 ? (
+                    <tr>
+                      <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-gray-300">
+                        No expired notices
+                      </td>
+                    </tr>
+                  ) : (
+                    expiredNotices.map((n) => (
+                      <tr key={n.id} className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                        <td className="py-2 px-4 w-[200px] max-w-[200px] truncate" title={n.title}>
+                          {n.title}
+                        </td>
+                        <td className="py-2 px-4 text-center">{n.category}</td>
+                        <td className="py-2 px-4 text-center text-gray-600 dark:text-gray-300">
+                          {n.createdAt?.toDate?.().toLocaleDateString() || "--"}
+                        </td>
+                        <td className="py-2 px-4 text-center text-gray-600 dark:text-gray-300">
+                          {n.createdAt?.toDate?.().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) || "--"}
+                        </td>
+                        <td className="py-2 px-4 text-center text-gray-600 dark:text-gray-300">
+                          {n.expiryDate ? new Date(n.expiryDate).toLocaleDateString() : "--"}
+                        </td>
+                        <td className="py-2 px-4 text-center text-gray-600 dark:text-gray-300">
+                          {n.expiryDate ? new Date(n.expiryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : "--"}
+                        </td>
+                        <td className="py-2 px-4">
+                          <button
+                            onClick={() => setViewingNotice(n)}
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded mr-2"
+                          >
+                            View
+                          </button>
+                          <button
+                            onClick={() => handleEdit(n)}
+                            className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded mr-2"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(n.id)}
+                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-1 rounded"
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
