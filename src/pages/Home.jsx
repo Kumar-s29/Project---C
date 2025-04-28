@@ -340,60 +340,80 @@ const Home = () => {
       </section>
 
       {/* Latest Notices */}
-      <section className="py-16 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className="text-2xl font-bold text-center mb-8">
-            Latest Notices
-          </h2>
+      <section
+  className="py-16 bg-gray-50 dark:bg-gray-800 border-4 border-transparent rounded-lg animate-border-glow"
+>
+  <div className="max-w-7xl mx-auto px-4">
+    <h2 className="text-2xl font-bold text-center mb-8">
+      Latest Notices
+    </h2>
 
-          {latestNotices.length === 0 ? (
-            <p className="text-center text-gray-500 dark:text-gray-400">
-              No recent notices available.
+    {latestNotices.length === 0 ? (
+      <p className="text-center text-gray-500 dark:text-gray-400">
+        No recent notices available.
+      </p>
+    ) : (
+      <motion.div
+        className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1 }}
+      >
+        {latestNotices.map((notice) => (
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
+            key={notice.id}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-5 transition-all duration-300 hover:shadow-xl"
+          >
+            <div className="flex items-center">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                {notice.title}
+              </h3>
+            </div>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
+              {notice.description.substring(0, 100)}...
             </p>
-          ) : (
-            <motion.div
-              className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1 }}
-            >
-              {latestNotices.map((notice) => (
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.3 }}
-                  key={notice.id}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-5 transition-all duration-300 hover:shadow-xl"
-                >
-                  <div className="flex items-center">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                      {notice.title}
-                    </h3>
-                  </div>
-                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
-                    {notice.description.substring(0, 100)}...
-                  </p>
-                  <div className="mt-4 flex justify-between items-center">
-                    <Link
-                      to={`/notice/${notice.id}`}
-                      className="text-blue-500 dark:text-blue-400 hover:text-blue-600"
-                    >
-                      Read More
-                    </Link>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
+            <div className="mt-4 flex justify-between items-center">
+              <Link
+                to={`/notice/${notice.id}`}
+                className="text-blue-500 dark:text-blue-400 hover:text-blue-600"
+              >
+                Read More
+              </Link>
+            </div>
+          </motion.div>
+        ))}
+      </motion.div>
+    )}
 
-          <div className="text-center mt-10">
-            <Link to="/all-notices">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
-                View All Notices
-              </button>
-            </Link>
-          </div>
-        </div>
-      </section>
+    <div className="text-center mt-10">
+      <Link to="/all-notices">
+        <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
+          View All Notices
+        </button>
+      </Link>
+    </div>
+  </div>
+</section>
+
+<style jsx>{`
+  @keyframes borderGlow {
+    0% {
+      border-color: transparent;
+    }
+    50% {
+      border-color: #3b82f6; /* Blue glow */
+    }
+    100% {
+      border-color: transparent;
+    }
+  }
+
+  .animate-border-glow {
+    animation: borderGlow 3s infinite;
+  }
+`}</style>
     </div>
   );
 };
