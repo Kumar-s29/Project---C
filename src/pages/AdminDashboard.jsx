@@ -18,6 +18,8 @@ const AdminDashboard = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newCategory, setNewCategory] = useState("");
   const [newDescription, setNewDescription] = useState("");
+  const [searchActiveNotices, setSearchActiveNotices] = useState("");
+  const [searchExpiredNotices, setSearchExpiredNotices] = useState("");
 
   const fetchNotices = async () => {
     try {
@@ -168,6 +170,27 @@ const AdminDashboard = () => {
           ))}
         </div>
 
+        {/* Active Notices Section */}
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+          Active Notices
+        </h2>
+
+        {/* Search for Active Notices */}
+        <div className="mb-4 relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <input
+            type="text"
+            placeholder="Search active notices by title, category or description..."
+            value={searchActiveNotices}
+            onChange={(e) => setSearchActiveNotices(e.target.value)}
+            className="w-full pl-10 p-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+          />
+        </div>
+
         {/* Notices Table */}
         <div className="overflow-x-auto bg-gray-50 dark:bg-gray-700 shadow rounded-lg">
           <div className="max-h-[330px] overflow-y-auto">
@@ -191,7 +214,15 @@ const AdminDashboard = () => {
                     </td>
                   </tr>
                 ) : (
-                  notices.map((n) => (
+                  notices
+                    .filter(n => {
+                      const searchTerm = searchActiveNotices.toLowerCase();
+                      return searchTerm === '' ||
+                        n.title.toLowerCase().includes(searchTerm) ||
+                        n.category.toLowerCase().includes(searchTerm) ||
+                        (n.description && n.description.toLowerCase().includes(searchTerm));
+                    })
+                    .map((n) => (
                     <tr key={n.id} className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
                       <td className="py-2 px-4 w-[200px] max-w-[200px] truncate" title={n.title}>
                         {n.title}
@@ -242,6 +273,22 @@ const AdminDashboard = () => {
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
             Expired Notices
           </h2>
+
+          {/* Search for Expired Notices */}
+          <div className="mb-4 relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </div>
+            <input
+              type="text"
+              placeholder="Search expired notices by title, category or description..."
+              value={searchExpiredNotices}
+              onChange={(e) => setSearchExpiredNotices(e.target.value)}
+              className="w-full pl-10 p-2 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            />
+          </div>
           <div className="overflow-x-auto bg-gray-50 dark:bg-gray-700 shadow rounded-lg">
             <div className="max-h-[330px] overflow-y-auto">
               <table className="min-w-full text-left whitespace-nowrap">
@@ -270,7 +317,15 @@ const AdminDashboard = () => {
                       </td>
                     </tr>
                   ) : (
-                    expiredNotices.map((n) => (
+                    expiredNotices
+                      .filter(n => {
+                        const searchTerm = searchExpiredNotices.toLowerCase();
+                        return searchTerm === '' ||
+                          n.title.toLowerCase().includes(searchTerm) ||
+                          n.category.toLowerCase().includes(searchTerm) ||
+                          (n.description && n.description.toLowerCase().includes(searchTerm));
+                      })
+                      .map((n) => (
                       <tr key={n.id} className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
                         <td className="py-2 px-4 w-[200px] max-w-[200px] truncate" title={n.title}>
                           {n.title}
