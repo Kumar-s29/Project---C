@@ -209,7 +209,7 @@ const AdminDashboard = () => {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-gray-300">
+                    <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-white">
                       Loading...
                     </td>
                   </tr>
@@ -224,20 +224,20 @@ const AdminDashboard = () => {
                     })
                     .map((n) => (
                     <tr key={n.id} className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                      <td className="py-2 px-4 w-[200px] max-w-[200px] truncate" title={n.title}>
+                      <td className="py-2 px-4 w-[200px] max-w-[200px] truncate text-gray-900 dark:text-white" title={n.title}>
                         {n.title}
                       </td>
-                      <td className="py-2 px-4 text-center">{n.category}</td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-2 px-4 text-center text-gray-900 dark:text-white">{n.category}</td>
+                      <td className="py-2 px-4 text-center text-gray-900 dark:text-white">
                         {n.createdAt?.toDate?.().toLocaleDateString() || "--"}
                       </td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-2 px-4 text-center text-gray-900 dark:text-white">
                         {n.createdAt?.toDate?.().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) || "--"}
                       </td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-2 px-4 text-center text-gray-900 dark:text-white">
                         {n.expiryDate ? new Date(n.expiryDate).toLocaleDateString() : "--"}
                       </td>
-                      <td className="py-2 px-4 text-center">
+                      <td className="py-2 px-4 text-center text-gray-900 dark:text-white">
                         {n.expiryDate ? new Date(n.expiryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : "--"}
                       </td>
                       <td className="py-2 px-4">
@@ -306,13 +306,13 @@ const AdminDashboard = () => {
                 <tbody>
                   {loading ? (
                     <tr>
-                      <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-gray-300">
+                      <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-white">
                         Loading...
                       </td>
                     </tr>
                   ) : expiredNotices.length === 0 ? (
                     <tr>
-                      <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-gray-300">
+                      <td colSpan="7" className="text-center py-6 text-gray-600 dark:text-white">
                         No expired notices
                       </td>
                     </tr>
@@ -327,20 +327,20 @@ const AdminDashboard = () => {
                       })
                       .map((n) => (
                       <tr key={n.id} className="border-t border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600 transition">
-                        <td className="py-2 px-4 w-[200px] max-w-[200px] truncate" title={n.title}>
+                        <td className="py-2 px-4 w-[200px] max-w-[200px] truncate text-gray-900 dark:text-white" title={n.title}>
                           {n.title}
                         </td>
-                        <td className="py-2 px-4 text-center">{n.category}</td>
-                        <td className="py-2 px-4 text-center text-gray-600 dark:text-gray-300">
+                        <td className="py-2 px-4 text-center text-gray-900 dark:text-white">{n.category}</td>
+                        <td className="py-2 px-4 text-center text-gray-900 dark:text-white">
                           {n.createdAt?.toDate?.().toLocaleDateString() || "--"}
                         </td>
-                        <td className="py-2 px-4 text-center text-gray-600 dark:text-gray-300">
+                        <td className="py-2 px-4 text-center text-gray-900 dark:text-white">
                           {n.createdAt?.toDate?.().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) || "--"}
                         </td>
-                        <td className="py-2 px-4 text-center text-gray-600 dark:text-gray-300">
+                        <td className="py-2 px-4 text-center text-gray-900 dark:text-white">
                           {n.expiryDate ? new Date(n.expiryDate).toLocaleDateString() : "--"}
                         </td>
-                        <td className="py-2 px-4 text-center text-gray-600 dark:text-gray-300">
+                        <td className="py-2 px-4 text-center text-gray-900 dark:text-white">
                           {n.expiryDate ? new Date(n.expiryDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : "--"}
                         </td>
                         <td className="py-2 px-4">
