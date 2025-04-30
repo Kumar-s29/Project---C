@@ -341,7 +341,7 @@ const Home = () => {
 
       {/* Latest Notices */}
       <section
-  className="py-16 bg-gray-50 dark:bg-gray-800 border-4 border-transparent rounded-lg animate-border-glow"
+  className="py-16 bg-gray-50 dark:bg-gray-800 border-4 border-transparent rounded-lg animate-snake-light"
 >
   <div className="max-w-7xl mx-auto px-4">
     <h2 className="text-2xl font-bold text-center mb-8">
@@ -398,20 +398,24 @@ const Home = () => {
 </section>
 
 <style jsx>{`
-  @keyframes borderGlow {
+  @keyframes snakeLight {
     0% {
-      border-color: transparent;
-    }
-    50% {
-      border-color: #3b82f6; /* Blue glow */
+      background-position: 0% 0%;
     }
     100% {
-      border-color: transparent;
+      background-position: 200% 0%;
     }
   }
 
-  .animate-border-glow {
-    animation: borderGlow 3s infinite;
+  .animate-snake-light {
+    border-image-source: linear-gradient(
+      90deg,
+      transparent,
+      #00ff00,
+      transparent
+    );
+    border-image-slice: 1;
+    animation: snakeLight 3s ease-in-out infinite;
   }
 `}</style>
     </div>
