@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebase/firebaseConfig";
+import "../index.css"; // Import your CSS file for styles
 import {
   collection,
   deleteDoc,
@@ -549,3 +550,5 @@ const AdminDashboard = () => {
         };
 
         export default AdminDashboard;
+
+    

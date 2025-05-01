@@ -1,19 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../index.css"; // Import your CSS file for styles
 import {
-  // FaFacebook,
   FaInstagram,
   FaLinkedin,
   FaMailBulk,
-  // FaTwitter,
   FaYoutube,
 } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    
-    <footer className="bg-sky-400 dark:bg-gray-900 text-black dark:text-white py-8 mt-15 font-outfit">
-      {/* <div className="border-b border-black/10 dark:border-red-700 mb-8" /> */}
+    <footer className="bg-sky-400 dark:bg-gray-900 text-black dark:text-white py-8 mt-15 font-outfit border-4 border-transparent animate-snake-light">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Branding */}
         <div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { db } from "../firebase/firebaseConfig";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import "../index.css"; // Import your CSS file for styles
 
 const UploadNotice = () => {
   const [notice, setNotice] = useState({
