@@ -361,28 +361,28 @@ const Home = () => {
       >
         {latestNotices.map((notice) => (
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            transition={{ duration: 0.3 }}
-            key={notice.id}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-5 transition-all duration-300 hover:shadow-xl"
-          >
-            <div className="flex items-center">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                {notice.title}
-              </h3>
-            </div>
-            <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
-              {notice.description.substring(0, 100)}...
-            </p>
-            <div className="mt-4 flex justify-between items-center">
-              <Link
-                to={`/notice/${notice.id}`}
-                className="text-blue-500 dark:text-blue-400 hover:text-blue-600"
-              >
-                Read More
-              </Link>
-            </div>
-          </motion.div>
+          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 0.3 }}
+          key={notice.id}
+          className="bg-white dark:bg-gray-800 border-2 border-red-500 dark:border-red-600 rounded-lg shadow-lg p-5 transition-all duration-300 hover:shadow-xl"
+        >
+          <div className="flex items-center">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {notice.title}
+            </h3>
+          </div>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
+            {notice.description.substring(0, 100)}...
+          </p>
+          <div className="mt-4 flex justify-between items-center">
+            <Link
+              to={`/notice/${notice.id}`}
+              className="text-blue-500 dark:text-blue-400 hover:text-blue-600"
+            >
+              Read More
+            </Link>
+          </div>
+        </motion.div>
         ))}
       </motion.div>
     )}
