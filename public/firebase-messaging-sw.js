@@ -7,13 +7,13 @@ importScripts(
 
 // Initialize Firebase with your config
 firebase.initializeApp({
-  apiKey: "AIzaSyAArcgf9A2A-6sVtcsfAgpV9eJprpHox14",
-  authDomain: "project-c-6fb8b.firebaseapp.com",
-  projectId: "project-c-6fb8b",
-  storageBucket: "project-c-6fb8b.appspot.com",
-  messagingSenderId: "88591876986",
-  appId: "1:88591876986:web:4528fdbb43e267b6288cc3",
-  measurementId: "G-RSPKBHGKWQ",
+  apiKey: "AIzaSyC4L1RDd0u7NuuxVyiDjtpb9j_zIzmvVD0",
+  authDomain: "viit---enotice-board.firebaseapp.com",
+  projectId: "viit---enotice-board",
+  storageBucket: "viit---enotice-board.firebasestorage.app",
+  messagingSenderId: "923236818332",
+  appId: "1:923236818332:web:da43c3b3b200f883bc7c59",
+  measurementId: "G-XJ61P1T5SN",
 });
 
 const messaging = firebase.messaging();
