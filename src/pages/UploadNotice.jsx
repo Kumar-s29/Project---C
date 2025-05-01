@@ -24,10 +24,10 @@ const UploadNotice = () => {
 
     try {
       let expiryDateTime = null;
-      
+
       if (notice.expiryDate) {
         // If expiry date is set but no time, default to 23:59
-        const time = notice.expiryTime || '23:59';
+        const time = notice.expiryTime || "23:59";
         expiryDateTime = new Date(`${notice.expiryDate}T${time}`).toISOString();
       }
 
@@ -99,7 +99,9 @@ const UploadNotice = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block mb-1 font-medium">Expiry Date (Optional)</label>
+              <label className="block mb-1 font-medium">
+                Expiry Date (Optional)
+              </label>
               <input
                 type="date"
                 name="expiryDate"
@@ -110,7 +112,9 @@ const UploadNotice = () => {
               />
             </div>
             <div>
-              <label className="block mb-1 font-medium">Expiry Time (Optional)</label>
+              <label className="block mb-1 font-medium">
+                Expiry Time (Optional)
+              </label>
               <input
                 type="time"
                 name="expiryTime"
