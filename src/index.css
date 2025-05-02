@@ -17,7 +17,7 @@
   display: inline-block;
   white-space: nowrap;
   animation: marquee 20s linear infinite;
-  padding-right: 50px;  /* Reduced from 100% to a fixed value */
+  padding-right: 50px; /* Reduced from 100% to a fixed value */
   margin-right: rem;
 }
 
@@ -30,4 +30,24 @@
 
 body {
   @apply font-outfit;
+}
+/* index.css */
+@keyframes snakeLight {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 200% 0%;
+  }
+}
+
+.animate-snake-light {
+  border-image-source: linear-gradient(
+    90deg,
+    transparent,
+    #00ff00,
+    transparent
+  );
+  border-image-slice: 1;
+  animation: snakeLight 3s ease-in-out infinite;
 }
