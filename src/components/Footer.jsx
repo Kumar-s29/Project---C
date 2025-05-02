@@ -1,12 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../index.css"; // Import your CSS file for styles
-import {
-  FaInstagram,
-  FaLinkedin,
-  FaMailBulk,
-  FaYoutube,
-} from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaMailBulk, FaYoutube } from "react-icons/fa";
 
 const Footer = () => {
   return (
@@ -77,7 +72,9 @@ const Footer = () => {
               <FaMailBulk />
             </a>
           </div>
-          <p className="text-sm mt-3">Vignan's Intitute of Information Technology(A),</p>
+          <p className="text-sm mt-3">
+            Vignan's Intitute of Information Technology(A),
+          </p>
           <p>Duvvada, Visakhapatnam-49</p>
         </div>
       </div>
