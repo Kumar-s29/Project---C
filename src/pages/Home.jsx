@@ -11,7 +11,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/firebaseConfig";
 import { motion } from "framer-motion";
+import { ReactTyped } from "react-typed";
 import ImportantUpdates from "../components/ImportantUpdates";
+
 import viit from "../assets/viit.jpg";
 
 const Home = () => {
@@ -23,7 +25,7 @@ const Home = () => {
     general: 0,
     academic: 0,
     sports: 0,
-    cultural: 0
+    cultural: 0,
   });
 
   useEffect(() => {
@@ -52,7 +54,7 @@ const Home = () => {
         general: generalCount,
         academic: academicCount,
         sports: sportsCount,
-        cultural: culturalCount
+        cultural: culturalCount,
       });
     };
 
@@ -71,7 +73,9 @@ const Home = () => {
         ...doc.data(),
       }));
       const now = new Date().getTime();
-      const activeNotices = notices.filter(notice => !notice.expiryDate || new Date(notice.expiryDate) > now);
+      const activeNotices = notices.filter(
+        (notice) => !notice.expiryDate || new Date(notice.expiryDate) > now
+      );
       setLatestNotices(activeNotices.slice(0, 3));
     });
 
@@ -83,8 +87,10 @@ const Home = () => {
     const unsubscribe = onSnapshot(collection(db, "notices"), (snapshot) => {
       const now = new Date().getTime();
       const activeNotices = snapshot.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(notice => !notice.expiryDate || new Date(notice.expiryDate) > now);
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter(
+          (notice) => !notice.expiryDate || new Date(notice.expiryDate) > now
+        );
 
       // Calculate counts for all categories at once
       const counts = {
@@ -94,10 +100,10 @@ const Home = () => {
         general: 0,
         academic: 0,
         sports: 0,
-        cultural: 0
+        cultural: 0,
       };
 
-      activeNotices.forEach(notice => {
+      activeNotices.forEach((notice) => {
         const category = notice.category?.toLowerCase();
         if (category in counts) {
           counts[category]++;
@@ -132,13 +138,24 @@ const Home = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-           VIIT Notices in One Place
+            VIIT Notices in One Place
           </h1>
-          <p className="text-lg mb-6 text-gray-200">
-            Stay updated with the latest news, events, exams, and placements.
-          </p>
+          <div>
+            <ReactTyped
+              strings={[
+                "Stay updated with the latest news, events, exams, and placements.",
+              ]}
+              typeSpeed={100}
+              backSpeed={50}
+              loop
+              className="text-lg mb-6 text-gray-200"
+            />
+          </div>
+          {/* <p className="text-lg mb-6 text-gray-200"> */}
+          {/* Stay updated with the latest news, events, exams, and placements. */}
+          {/* </p> */}
           <Link to="/all-notices">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">
+            <button className="bg-blue-600 hover:bg-blue-700 mt-4 text-white px-6 py-3 rounded-lg transition">
               Explore Notices
             </button>
           </Link>
@@ -158,7 +175,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4 ">
             {/* Exams */}
             <div className="bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden shadow rounded-lg border border-gray-200 transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer">
               <div className="p-5">
@@ -340,84 +357,82 @@ const Home = () => {
       </section>
 
       {/* Latest Notices */}
-      <section
-  className="py-16 bg-gray-50 dark:bg-gray-800 border-4 border-transparent rounded-lg animate-snake-light"
->
-  <div className="max-w-7xl mx-auto px-4">
-    <h2 className="text-2xl font-bold text-center mb-8">
-      Latest Notices
-    </h2>
+      <section className="py-16 bg-gray-50 dark:bg-gray-800 border-4 border-transparent rounded-lg">
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className="text-2xl font-bold text-center mb-8">
+            Latest Notices
+          </h2>
 
-    {latestNotices.length === 0 ? (
-      <p className="text-center text-gray-500 dark:text-gray-400">
-        No recent notices available.
-      </p>
-    ) : (
-      <motion.div
-        className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
-        {latestNotices.map((notice) => (
-          <motion.div
-          whileHover={{ scale: 1.05 }}
-          transition={{ duration: 0.3 }}
-          key={notice.id}
-          className="bg-white dark:bg-gray-800 border-2 border-red-500 dark:border-red-600 rounded-lg shadow-lg p-5 transition-all duration-300 hover:shadow-xl"
-        >
-          <div className="flex items-center">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              {notice.title}
-            </h3>
-          </div>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
-            {notice.description.substring(0, 100)}...
-          </p>
-          <div className="mt-4 flex justify-between items-center">
-            <Link
-              to={`/notice/${notice.id}`}
-              className="text-blue-500 dark:text-blue-400 hover:text-blue-600"
+          {latestNotices.length === 0 ? (
+            <p className="text-center text-gray-500 dark:text-gray-400">
+              No recent notices available.
+            </p>
+          ) : (
+            <motion.div
+              className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
             >
-              Read More
+              {latestNotices.map((notice) => (
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                  key={notice.id}
+                  className="bg-white dark:bg-gray-800 dark:border-2 dark:border-red-600 rounded-lg shadow-lg p-5 transition-all duration-300 dark:hover:shadow-xl"
+                >
+                  <div className="flex items-center">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                      {notice.title}
+                    </h3>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-300">
+                    {notice.description.substring(0, 100)}...
+                  </p>
+                  <div className="mt-4 flex justify-between items-center">
+                    <Link
+                      to={`/notice/${notice.id}`}
+                      className="text-blue-500 dark:text-blue-400 hover:text-blue-600"
+                    >
+                      Read More
+                    </Link>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          )}
+
+          <div className="text-center mt-10">
+            <Link to="/all-notices">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
+                View All Notices
+              </button>
             </Link>
           </div>
-        </motion.div>
-        ))}
-      </motion.div>
-    )}
+        </div>
+      </section>
 
-    <div className="text-center mt-10">
-      <Link to="/all-notices">
-        <button className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition">
-          View All Notices
-        </button>
-      </Link>
-    </div>
-  </div>
-</section>
+      <style jsx>{`
+        @keyframes snakeLight {
+          0% {
+            background-position: 0% 0%;
+          }
+          100% {
+            background-position: 200% 0%;
+          }
+        }
 
-<style jsx>{`
-  @keyframes snakeLight {
-    0% {
-      background-position: 0% 0%;
-    }
-    100% {
-      background-position: 200% 0%;
-    }
-  }
-
-  .animate-snake-light {
-    border-image-source: linear-gradient(
-      90deg,
-      transparent,
-      #00ff00,
-      transparent
-    );
-    border-image-slice: 1;
-    animation: snakeLight 3s ease-in-out infinite;
-  }
-`}</style>
+        .animate-snake-light {
+          border-image-source: linear-gradient(
+            90deg,
+            transparent,
+            #00ff00,
+            transparent
+          );
+          border-image-slice: 1;
+          animation: snakeLight 3s ease-in-out infinite;
+        }
+      `}</style>
     </div>
   );
 };
